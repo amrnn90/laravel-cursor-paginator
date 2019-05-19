@@ -1,0 +1,27 @@
+{
+    "name": "amrnn90/laravel-cursor-paginator",
+    "description": "Cursor pagination for Laravel",
+    "type": "library",
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8.1",
+        "orchestra/testbench": "^3.8"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amr Noman",
+            "email": "amrnn90@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Amrnn90\\CursorPaginator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
