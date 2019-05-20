@@ -188,9 +188,26 @@ class QueryBeforeTest extends TestCase
             ->process(Carbon::createFromDate(2008)->timestamp);
         $this->assertEquals(
             [2004, 2006],
-            $resultQuery->get()->pluck('created_at')->map(function($i) {
+            $resultQuery->get()->pluck('created_at')->map(function ($i) {
                 return Carbon::parse($i)->get('year');
             })->all()
+        );
+    }
+
+
+    /** @test */
+    public function it_works_with_computed_columns()
+    {
+        Reply::truncate();
+        foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
+            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+        }
+
+        $query = DB::table('replies')->selectRaw('strftime("%Y", `created_at`) as year')->orderBy('year');
+        $resultQuery = (new QueryBefore($query, 2))->process('2008');
+        $this->assertEquals(
+            ['2004', '2006'],
+            $resultQuery->pluck('year')->all()
         );
     }
 }

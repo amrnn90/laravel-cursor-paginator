@@ -67,6 +67,12 @@ abstract class QueryAbstract
         return $query;
     }
 
+    protected function removeOrders($query)
+    {
+        $this->extractQueryObject($query)->orders = null;
+        return $query;
+    }
+
     protected function getCleanQueryFrom($query)
     {
         if (method_exists($query, 'getModel')) {
@@ -87,6 +93,21 @@ abstract class QueryAbstract
         if (method_exists($to, 'setEagerLoads') && method_exists($from, 'getEagerLoads')) {
             $to->setEagerLoads($from->getEagerLoads());
         }
+    }
+
+    protected function wrapQuery($query)
+    {
+        $inner = clone $query;
+        $wrapper = $this->getCleanQueryFrom($inner);
+
+        $this->copyOrders($inner, $wrapper);
+        $this->copyEagerLoad($inner, $wrapper);
+
+        if (!$this->extractQueryObject($inner)->limit) {
+            $this->removeOrders($inner);
+        }
+
+        return $wrapper->fromSub($inner, null);
     }
 
     protected function canOperateOnQuery()

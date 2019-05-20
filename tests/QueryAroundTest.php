@@ -216,4 +216,21 @@ class QueryAroundTest extends TestCase
         $resultQuery = (new QueryAround($query, 3))->process(6);
         $this->assertEquals([4, 6, 8], $resultQuery->get()->pluck('id')->all());
     }
+
+    /** @test */
+    public function it_works_with_computed_columns()
+    {
+        Reply::truncate();
+        foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
+            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+        }
+
+        $query = DB::table('replies')->selectRaw('strftime("%Y", `created_at`) as year')->orderBy('year');
+        $resultQuery = (new QueryAround($query, 3))->process('2008');
+
+        $this->assertEquals(
+            ['2006', '2008', '2009'],
+            $resultQuery->pluck('year')->all()
+        );
+    }
 }

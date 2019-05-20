@@ -6,11 +6,11 @@ class QueryAfter extends PaginationQueryAbstract
 {
     protected function doProcess($target)
     {
-        $query = $this->query;
-        $comparator = $this->getAfterComparator($query);
+        $wrapper = $this->wrapQuery($this->query);
+        $comparator = $this->getAfterComparator($wrapper);
 
-        return $query
-            ->where($this->getOrderColumn($query), $comparator, $target)
+        return $wrapper
+            ->where($this->getOrderColumn($wrapper), $comparator, $target)
             ->limit($this->perPage);
     }
 
