@@ -210,4 +210,67 @@ class QueryBeforeTest extends TestCase
             $resultQuery->pluck('year')->all()
         );
     }
+
+    /** @test */
+    public function it_can_handle_multiple_column_ordering()
+    {
+        Reply::truncate();
+        foreach ([2004, 2003, 2003, 2001, 2003, 2004] as $year) {
+            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+        }
+
+        $query = Reply::orderBy('created_at')->orderBy('id', 'desc');
+        $resultQuery = (new QueryBefore($query, 3))->process(Carbon::createFromDate(2005));
+        $this->assertEquals(
+            [2, 6, 1],
+            $resultQuery->pluck('id')->all()
+        );
+
+        $query = Reply::orderBy('created_at', 'desc')->orderBy('id');
+        $resultQuery = (new QueryBefore($query, 3))->process(Carbon::createFromDate(2002));
+
+        $this->assertEquals(
+            [2, 3, 5],
+            $resultQuery->pluck('id')->all()
+        );
+    }
+
+    /** @test */
+    public function it_accepts_multi_column_pagination_targets()
+    {
+        Reply::truncate();
+        foreach ([1, 2, 3, 4,  1, 2, 3, 4,  1, 2, 3, 4,] as $likes) {
+            factory(Reply::class)->create(['likes_count' => $likes]);
+        }
+
+        $query = Reply::orderBy('likes_count')->orderBy('id', 'desc');
+        $resultQuery = (new QueryBefore($query, 3))->process([4, 8]);
+
+        $this->assertEquals(
+            [7, 3, 12],
+            $resultQuery->pluck('id')->all()
+        );
+    }
+
+
+    // /** @test */
+    // public function benchmark()
+    // {
+    //     Reply::truncate();
+    //     for ($i=0; $i < 30; $i++) {
+    //         factory(Reply::class, 200)->create();
+    //         // fwrite(STDERR, print_r($i, TRUE));
+    //     }
+    //     $query = Reply::orderBy('id');
+
+    //     $before = microtime(true);
+    //     $resultQuery = (new QueryBefore($query, 30))->process(10320);
+    //     $after = microtime(true);
+
+
+    //     fwrite(STDERR, print_r($after - $before, TRUE));
+    //     fwrite(STDERR, print_r($resultQuery->pluck('id')->all(), TRUE));
+
+    //     $this->assertTrue(true);
+    // }
 }

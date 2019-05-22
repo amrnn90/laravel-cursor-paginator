@@ -10,9 +10,9 @@ class QueryAround extends PaginationQueryAbstract
         $before = (new QueryBefore($query, floor($this->perPage / 2)))->process($target);
         $after = (new QueryAfterInclusive($query, ceil($this->perPage / 2)))->process($target);
 
-        $unionQuery =  $before->union($after);
-        $this->extractQueryObject($unionQuery)->unionOrders = $this->extractQueryObject($query)->orders;
+        $outerQuery = $this->wrapQuery($before->union($after));
+        // $this->copyOrders($query, $outerQuery);
 
-        return $unionQuery;
+        return $outerQuery;
     }
 }

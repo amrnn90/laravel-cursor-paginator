@@ -185,10 +185,33 @@ class QueryAfterTest extends TestCase
 
         $query = DB::table('replies')->selectRaw('strftime("%Y", `created_at`) as year')->orderBy('year');
         $resultQuery = (new QueryAfter($query, 2))->process('2008');
-        
+
         $this->assertEquals(
             ['2009', '2010'],
             $resultQuery->pluck('year')->all()
+        );
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_column_ordering()
+    {
+        Reply::truncate();
+        foreach ([2004, 2003, 2003, 2001, 2003, 2004] as $year) {
+            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+        }
+
+        $query = Reply::orderBy('created_at')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAfter($query, 3))->process(Carbon::createFromDate(2002));
+        $this->assertEquals(
+            [5, 3, 2],
+            $resultQuery->pluck('id')->all()
+        );
+
+        $query = Reply::orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAfter($query, 3))->process(Carbon::createFromDate(2005));
+        $this->assertEquals(
+            [6, 1, 5],
+            $resultQuery->pluck('id')->all()
         );
     }
 }

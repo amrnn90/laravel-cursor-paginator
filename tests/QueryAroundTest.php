@@ -233,4 +233,28 @@ class QueryAroundTest extends TestCase
             $resultQuery->pluck('year')->all()
         );
     }
+
+    /** @test */
+    public function it_can_handle_multiple_column_ordering()
+    {
+        Reply::truncate();
+        foreach ([2004, 2003, 2003, 2001, 2003, 2004] as $year) {
+            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+        }
+
+        $query = Reply::orderBy('created_at')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate(2002));
+        // dd($resultQuery->toSql());
+        $this->assertEquals(
+            [4, 5, 3],
+            $resultQuery->pluck('id')->all()
+        );
+
+        $query = Reply::orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate(2002));
+        $this->assertEquals(
+            [2, 4],
+            $resultQuery->pluck('id')->all()
+        );
+    }
 }

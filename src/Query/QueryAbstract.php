@@ -4,7 +4,6 @@ namespace Amrnn90\CursorPaginator\Query;
 
 use Amrnn90\CursorPaginator\Exceptions\CursorPaginatorException;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 abstract class QueryAbstract
 {
@@ -18,13 +17,6 @@ abstract class QueryAbstract
         $this->perPage = $perPage;
         $this->options = $options;
         $this->canOperateOnQuery();
-    }
-
-    protected function getOrderColumn($query)
-    {
-        if ($this->hasOrderColumn($query)) {
-            return $this->extractQueryObject($query)->orders[0]['column'];
-        }
     }
 
     protected function extractQueryObject($query)
@@ -41,21 +33,22 @@ abstract class QueryAbstract
         return $this->extractQueryObject($this->query);
     }
 
-    protected function hasOrderColumn($query)
+    protected function hasOrderColumn($query, $index = 0)
     {
         $orders = $this->extractQueryObject($query)->orders;
-        return $orders && count($orders) > 0;
+        return $orders && count($orders) > $index;
     }
 
-    protected function getOrderDirection($query)
+    protected function getOrderColumn($query, $index = 0)
     {
-        return $this->extractQueryObject($query)->orders[0]['direction'];
+        if ($this->hasOrderColumn($query, $index)) {
+            return $this->extractQueryObject($query)->orders[$index]['column'];
+        }
     }
 
-    protected function comparator($query, $inclusive)
+    protected function getOrderDirection($query, $index = 0)
     {
-        $comparator = $this->getOrderDirection($query) == 'desc' ? '<' : '>';
-        return $inclusive ? $comparator . '=' : $comparator;
+        return $this->extractQueryObject($query)->orders[$index]['direction'];
     }
 
     protected function reverseQueryOrders($query)
@@ -115,18 +108,5 @@ abstract class QueryAbstract
         if (!$this->hasOrderColumn($this->query)) {
             throw new CursorPaginatorException('Query must be ordered on some column');
         }
-    }
-
-
-    protected function formatTarget($query, $target)
-    {
-        $column = $this->getOrderColumn($query);
-        if (
-            (method_exists($query, 'getModel') && in_array($column, $query->getModel()->getDates()))
-            || (isset($this->options['dates']) && in_array($column, $this->options['dates']))
-        ) {
-            return Carbon::parse($target);
-        }
-        return $target;
     }
 }
