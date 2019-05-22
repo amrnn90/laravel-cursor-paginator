@@ -149,18 +149,18 @@ class QueryAroundTest extends TestCase
     {
         Reply::truncate();
         foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+            factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
         }
 
         $query = Reply::orderBy('created_at', 'asc');
-        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate((2008)));
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::create((2008)));
         $this->assertEquals(
             [2006, 2008, 2009],
             $resultQuery->get()->pluck('created_at')->map->get('year')->all()
         );
 
         $query = Reply::orderBy('created_at', 'desc');
-        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate((2008)));
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::create((2008)));
         $this->assertEquals(
             [2009, 2008, 2006],
             $resultQuery->get()->pluck('created_at')->map->get('year')->all()
@@ -172,11 +172,11 @@ class QueryAroundTest extends TestCase
     {
         Reply::truncate();
         foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+            factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
         }
 
         $query = Reply::orderBy('created_at', 'asc');
-        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate(2008)->timestamp);
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::create(2008)->timestamp);
         $this->assertEquals(
             [2006, 2008, 2009],
             $resultQuery->get()->pluck('created_at')->map->get('year')->all()
@@ -222,7 +222,7 @@ class QueryAroundTest extends TestCase
     {
         Reply::truncate();
         foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+            factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
         }
 
         $query = DB::table('replies')->selectRaw('strftime("%Y", `created_at`) as year')->orderBy('year');
@@ -239,11 +239,11 @@ class QueryAroundTest extends TestCase
     {
         Reply::truncate();
         foreach ([2004, 2003, 2003, 2001, 2003, 2004] as $year) {
-            factory(Reply::class)->create(['created_at' => Carbon::createFromDate($year)]);
+            factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
         }
 
         $query = Reply::orderBy('created_at')->orderBy('id', 'desc');
-        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate(2002));
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::create(2002));
         // dd($resultQuery->toSql());
         $this->assertEquals(
             [4, 5, 3],
@@ -251,7 +251,7 @@ class QueryAroundTest extends TestCase
         );
 
         $query = Reply::orderBy('created_at', 'desc')->orderBy('id', 'desc');
-        $resultQuery = (new QueryAround($query, 3))->process(Carbon::createFromDate(2002));
+        $resultQuery = (new QueryAround($query, 3))->process(Carbon::create(2002));
         $this->assertEquals(
             [2, 4],
             $resultQuery->pluck('id')->all()

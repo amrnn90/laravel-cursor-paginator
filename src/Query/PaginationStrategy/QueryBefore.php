@@ -15,8 +15,7 @@ class QueryBefore extends PaginationQueryAbstract
     {
         $middleQuery = $this->getMiddleQuery($this->query, $targets);
 
-        $res =  $this->getOuterQuery($middleQuery);
-        return $res;
+        return $this->getOuterQuery($middleQuery);
     }
 
     protected function getMiddleQuery($query, $targets)
