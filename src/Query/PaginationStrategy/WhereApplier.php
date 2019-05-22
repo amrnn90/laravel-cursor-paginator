@@ -21,21 +21,17 @@ class WhereApplier
 
     public function applyWhere()
     {
-        $targets = $this->targets;
-        $query = $this->query;
-
-        for ($i = 0; $i < count($targets); $i++) {
-            $column = $this->getOrderColumn($query, $i);
+        for ($i = 0; $i < count($this->targets); $i++) {
+            $column = $this->getOrderColumn($this->query, $i);
             $comparator = $this->getComparatorForTarget($i);
 
             if ($i == 0) {
-                $target = $targets[$i];
-                $query->whereRaw("`$column` $comparator ?", [$target]);
+                $this->query->whereRaw("`$column` $comparator ?", [$this->targets[$i]]);
             } else {
                 $this->applyWhereForColumnsAfterFirst($i);
             }
         }
-        return $query;
+        return $this->query;
     }
 
     protected function applyWhereForColumnsAfterFirst($colIndex)
@@ -73,7 +69,7 @@ class WhereApplier
         return $comparator;
     }
 
-    public function comparator($inclusive, $index = 0)
+    public function comparator($inclusive, $index)
     {
         $comparator = $this->getOrderDirection($this->query, $index) == 'desc' ? '<' : '>';
         return $inclusive ? $comparator . '=' : $comparator;

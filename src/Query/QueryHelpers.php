@@ -22,14 +22,14 @@ trait QueryHelpers
         return $orders && count($orders) > $index;
     }
 
-    protected function getOrderColumn($query, $index = 0)
+    protected function getOrderColumn($query, $index)
     {
         if ($this->hasOrderColumn($query, $index)) {
             return $this->extractQueryObject($query)->orders[$index]['column'];
         }
     }
 
-    protected function getOrderDirection($query, $index = 0)
+    protected function getOrderDirection($query, $index)
     {
         return $this->extractQueryObject($query)->orders[$index]['direction'];
     }

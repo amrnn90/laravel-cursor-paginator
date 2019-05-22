@@ -8,7 +8,7 @@ class QueryMeta extends QueryAbstract
     public function meta($items)
     {
         $query = $this->query;
-        $orderColumn = $this->getOrderColumn($query);
+        $orderColumn = $this->getOrderColumn($query, 0);
 
         $countQuery = with(clone $query)->selectRaw('COUNT(*) as `count`');
         $firstQuery = with(clone $query)->select($orderColumn)->limit(1);
