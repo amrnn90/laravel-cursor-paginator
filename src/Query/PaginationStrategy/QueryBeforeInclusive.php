@@ -6,8 +6,8 @@ use Amrnn90\CursorPaginator\Query\PaginationStrategy\QueryBefore;
 
 class QueryBeforeInclusive extends QueryBefore
 {
-    protected function getBeforeComparator($query)
+    public function isInclusive()
     {
-        return $this->comparator($query, true);
+        return true;
     }
 }

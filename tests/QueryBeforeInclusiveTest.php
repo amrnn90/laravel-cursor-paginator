@@ -31,4 +31,20 @@ class QueryBeforeInclusiveTest extends TestCase
         $this->assertEquals([9, 10], $resultQuery->get()->pluck('id')->all());
     }
 
+    /** @test */
+    public function it_accepts_multi_column_pagination_targets()
+    {
+        Reply::truncate();
+        foreach ([1, 2, 3, 4,  1, 2, 3, 4,  1, 2, 3, 4,] as $likes) {
+            factory(Reply::class)->create(['likes_count' => $likes]);
+        }
+
+        $query = Reply::orderBy('likes_count')->orderBy('id');
+        $resultQuery = (new QueryBeforeInclusive($query, 3))->process([4, 8]);
+
+        $this->assertEquals(
+            [11, 4, 8],
+            $resultQuery->pluck('id')->all()
+        );
+    }
 }

@@ -14,20 +14,8 @@ abstract class PaginationQueryAbstract extends QueryAbstract
         return $this->doProcess($this->formatTargets($this->query, $targets));
     }
 
-
-    protected function comparator($query, $inclusive, $index = 0)
-    {
-        $comparator = $this->getOrderDirection($query, $index) == 'desc' ? '<' : '>';
-        return $inclusive ? $comparator . '=' : $comparator;
-    }
-
-    protected function reverseComparator($comparator) {
-        switch ($comparator) {
-            case '>' : return '<=';
-            case '>=': return '<';
-            case '<' : return '>=';
-            case '<=': return '>';
-        }
+    public function isInclusive() {
+        return false;
     }
 
     protected function formatTargets($query, $targets)

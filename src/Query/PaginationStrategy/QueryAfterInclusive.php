@@ -4,8 +4,8 @@ namespace Amrnn90\CursorPaginator\Query\PaginationStrategy;
 
 class QueryAfterInclusive extends QueryAfter
 {
-    protected function getAfterComparator($query)
+    public function isInclusive()
     {
-        return $this->comparator($query, true);
+        return true;
     }
 }

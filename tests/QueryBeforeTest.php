@@ -251,26 +251,4 @@ class QueryBeforeTest extends TestCase
             $resultQuery->pluck('id')->all()
         );
     }
-
-
-    // /** @test */
-    // public function benchmark()
-    // {
-    //     Reply::truncate();
-    //     for ($i=0; $i < 30; $i++) {
-    //         factory(Reply::class, 200)->create();
-    //         // fwrite(STDERR, print_r($i, TRUE));
-    //     }
-    //     $query = Reply::orderBy('id');
-
-    //     $before = microtime(true);
-    //     $resultQuery = (new QueryBefore($query, 30))->process(10320);
-    //     $after = microtime(true);
-
-
-    //     fwrite(STDERR, print_r($after - $before, TRUE));
-    //     fwrite(STDERR, print_r($resultQuery->pluck('id')->all(), TRUE));
-
-    //     $this->assertTrue(true);
-    // }
 }

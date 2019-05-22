@@ -257,4 +257,29 @@ class QueryAroundTest extends TestCase
             $resultQuery->pluck('id')->all()
         );
     }
+
+    /** @test */
+    public function it_accepts_multi_column_pagination_targets()
+    {
+        Reply::truncate();
+        foreach ([1, 2, 3, 4,  1, 2, 3, 4,  1, 2, 3, 4,] as $likes) {
+            factory(Reply::class)->create(['likes_count' => $likes]);
+        }
+
+        $query = Reply::orderBy('likes_count')->orderBy('id');
+        $resultQuery = (new QueryAround($query, 3))->process([1, 9]);
+
+        $this->assertEquals(
+            [5, 9, 2],
+            $resultQuery->pluck('id')->all()
+        );
+
+        $query = Reply::orderBy('likes_count', 'desc')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAround($query, 3))->process([4, 4]);
+
+        $this->assertEquals(
+            [8, 4, 11],
+            $resultQuery->pluck('id')->all()
+        );
+    }
 }
