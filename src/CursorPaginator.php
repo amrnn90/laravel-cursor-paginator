@@ -12,6 +12,7 @@ use Illuminate\Contracts\Pagination\Paginator as PaginatorContract;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\HtmlString;
 
 class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAccess, Countable, IteratorAggregate, JsonSerializable, Jsonable, PaginatorContract
 {
@@ -64,7 +65,7 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
 
     public function onFirstPage()
     {
-        return $this->meta['current'] == $this->meta['first'];
+        return empty($this->meta['previous']);
     }
 
     public function getPageName()
@@ -110,10 +111,18 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         return $this->url($this->meta['next']);
     }
 
+    public function links($view = null, $data = [])
+    {
+        return $this->render($view, $data);
+    }
+
     public function render($view = null, $data = [])
     {
-        // No render method
-        return '';
+        return new HtmlString(
+            static::viewFactory()->make($view ?: static::$defaultSimpleView, array_merge($data, [
+                'paginator' => $this,
+            ]))->render()
+        );
     }
 
     public function toArray()

@@ -70,10 +70,10 @@ class CursorPaginatorTest extends TestCase
     /** @test */
     public function it_knows_when_on_first_page()
     {
-        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['first' => new Cursor('after_i', 1)]));
+        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['previous' => null]));
         $this->assertEquals(true, $paginator->onFirstPage());
 
-        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['first' => ['direction' => 'next_i', 'target' => 2]]));
+        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['previous' => new Cursor('before', 3)]));
         $this->assertEquals(false, $paginator->onFirstPage());
     }
 
@@ -156,5 +156,20 @@ class CursorPaginatorTest extends TestCase
             'prev_page_url' => 'http://localhost?before=2',
             'path' => 'http://localhost',
         ], $paginator->toArray());
+    }
+
+    /** @test */
+    public function it_renders_pagination_links()
+    {
+        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['previous' => null, 'next' => new Cursor('after', 3)]));
+        $this->assertStringContainsString('<li class="page-item disabled" aria-disabled="true">', $paginator->links());
+        $this->assertStringContainsString('<a class="page-link" href="http://localhost?after=3" rel="next">', $paginator->links());
+
+        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['previous' => new Cursor('before_i', 5), 'next' => null]));
+        $this->assertStringContainsString('<a class="page-link" href="http://localhost?before_i=5" rel="prev">', $paginator->links());
+        $this->assertStringContainsString('<li class="page-item disabled" aria-disabled="true">', $paginator->links());
+
+        $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['total' => 3]));
+        $this->assertEquals('', $paginator->links());
     }
 }
