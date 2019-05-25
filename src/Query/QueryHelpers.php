@@ -29,6 +29,15 @@ trait QueryHelpers
         }
     }
 
+    protected function getOrderColumnList($query)
+    {
+        $result = [];
+        foreach ($this->extractQueryObject($query)->orders as $column) {
+            $result[] = $column['column'];
+        }
+        return $result;
+    }
+
     protected function getOrderDirection($query, $index)
     {
         return $this->extractQueryObject($query)->orders[$index]['direction'];

@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 class CursorPaginatorMacro
 {
-    protected $request;
+    protected $requestData;
+    protected $currentCursor;
     protected $perPage;
     protected $columns;
     protected $queryMappings = [
@@ -14,15 +15,15 @@ class CursorPaginatorMacro
         'after'  => Query\PaginationStrategy\QueryAfter::class,
         'around' => Query\PaginationStrategy\QueryAround::class
     ];
-    
-    function __construct(array $request, $perPage = 10, $columns = ['*'])
+
+    public function __construct(array $requestData, $perPage = 10, $columns = ['*'])
     {
-        $this->request = $request;
-        $this->perPage = $perPage;
+        $this->setRequestData($requestData);
+        $this->setPerPage($perPage);
         $this->columns = $columns;
     }
 
-    function process($query)
+    public function process($query)
     {
         $items = $this->resolveQuery($query)->get();
         $meta = $this->meta($query, $items);
@@ -30,24 +31,44 @@ class CursorPaginatorMacro
         return new CursorPaginator($items, 2, $meta);
     }
 
-    function resolveQuery($query) 
+    public function setRequestData($requestData)
     {
+        $this->requestData = $requestData;
+        $this->setCurrentCursor();
+        return $this;
+    }
 
-        foreach ($this->queryMappings as $key => $class) {
-            if ($value = array_get($this->request, $key)) {
-                return app()->makeWith($class, [
-                    'query' => $query,
-                    'perPage' => $this->perPage
-                ])->process($value);
+    public function setPerPage($perPage)
+    {
+        $this->perPage = $perPage;
+        return $this;
+    }
+
+    protected function setCurrentCursor()
+    {
+        foreach (array_keys($this->queryMappings) as $direction) {
+            if ($target = array_get($this->requestData, $direction)) {
+                $this->currentCursor = new Cursor($direction, $target);
+                return;
             }
         }
     }
 
-    function meta($query, $items)
+    protected function resolveQuery($query)
+    {
+        $class = $this->queryMappings[$this->currentCursor->direction];
+
+        return app()->makeWith($class, [
+            'query' => $query,
+            'perPage' => $this->perPage
+        ])->process($this->currentCursor->getParsedTarget());
+    }
+
+    protected function meta($query, $items)
     {
         return app()->makeWith(Query\QueryMeta::class, [
             'query' => $query,
             'perPage' => $this->perPage,
-        ])->meta($items);
+        ])->meta($items, $this->currentCursor);
     }
 }
