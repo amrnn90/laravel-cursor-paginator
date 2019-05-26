@@ -24,7 +24,7 @@ class QueryMetaTest extends TestCase
         $items = Reply::whereIn('id', [2,3,4])->get()->sortBy('id');
         $cursor = new Cursor('before', 5);
 
-        $meta = (new QueryMeta($query, null))->meta($items, $cursor);
+        $meta = (new QueryMeta($query, $items, $cursor))->meta();
         $this->assertEquals(10, $meta['total']);
     }
 }

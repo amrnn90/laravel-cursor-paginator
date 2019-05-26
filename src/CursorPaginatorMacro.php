@@ -2,8 +2,6 @@
 
 namespace Amrnn90\CursorPaginator;
 
-use Illuminate\Http\Request;
-
 class CursorPaginatorMacro
 {
     protected $requestData;
@@ -66,9 +64,7 @@ class CursorPaginatorMacro
 
     protected function meta($query, $items)
     {
-        return app()->makeWith(Query\QueryMeta::class, [
-            'query' => $query,
-            'perPage' => $this->perPage,
-        ])->meta($items, $this->currentCursor);
+        return (new Query\QueryMeta($query, $items, $this->currentCursor))
+            ->meta();
     }
 }

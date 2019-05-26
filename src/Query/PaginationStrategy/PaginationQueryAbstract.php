@@ -4,7 +4,6 @@ namespace Amrnn90\CursorPaginator\Query\PaginationStrategy;
 
 use Amrnn90\CursorPaginator\Query\QueryHelpers;
 use Carbon\Carbon;
-use Amrnn90\CursorPaginator\Exceptions\CursorPaginatorException;
 
 abstract class PaginationQueryAbstract
 {
@@ -37,7 +36,7 @@ abstract class PaginationQueryAbstract
 
     public function process($targets)
     {
-        $this->canOperateOnQuery();
+        $this->ensureQueryIsOrdered($this->query);
 
         $targets = is_array($targets) ? $targets : [$targets];
 
@@ -60,17 +59,6 @@ abstract class PaginationQueryAbstract
             }
         }
         return $targets;
-    }
-
-    protected function canOperateOnQuery()
-    {
-        if (!$this->query) {
-            throw new CursorPaginatorException('No query provided');
-        }
-
-        if (!$this->hasOrderColumn($this->query)) {
-            throw new CursorPaginatorException('Query must be ordered on some column');
-        }
     }
 
     abstract protected function doProcess($targets);

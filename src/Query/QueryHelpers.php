@@ -3,6 +3,7 @@
 namespace Amrnn90\CursorPaginator\Query;
 
 use Illuminate\Support\Facades\DB;
+use Amrnn90\CursorPaginator\Exceptions\CursorPaginatorException;
 
 trait QueryHelpers
 {
@@ -93,5 +94,16 @@ trait QueryHelpers
         }
 
         return $wrapper->fromSub($inner, null);
+    }
+
+    protected function ensureQueryIsOrdered($query)
+    {
+        if (!$query) {
+            throw new CursorPaginatorException('No query provided');
+        }
+
+        if (!$this->hasOrderColumn($query)) {
+            throw new CursorPaginatorException('Query must be ordered on some column');
+        }
     }
 }

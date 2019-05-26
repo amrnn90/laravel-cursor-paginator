@@ -11,7 +11,6 @@ class QueryAround extends PaginationQueryAbstract
         $after = (new QueryAfterInclusive($query, ceil($this->perPage / 2)))->process($target);
 
         $outerQuery = $this->wrapQuery($before->union($after));
-        // $this->copyOrders($query, $outerQuery);
 
         return $outerQuery;
     }
