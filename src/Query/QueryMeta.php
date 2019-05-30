@@ -41,13 +41,13 @@ class QueryMeta
     protected function firstItemCursor($meta)
     {
         $itemsFirst = $meta->first;
-        return new Cursor('after_i', $this->targetsManager->targetFromItem($itemsFirst));
+        return Cursor::afterInclusive($this->targetsManager->targetFromItem($itemsFirst));
     }
 
     protected function lastItemCursor($meta)
     {
         $itemsLast = $meta->last;
-        return new Cursor('before_i', $this->targetsManager->targetFromItem($itemsLast));
+        return Cursor::beforeInclusive($this->targetsManager->targetFromItem($itemsLast));
     }
 
     protected function previousCursor($meta)
@@ -55,7 +55,7 @@ class QueryMeta
         $itemsFirst = $this->items->first();
         $itemsFirstTarget = $this->targetsManager->targetFromItem($itemsFirst);
 
-        return $meta->first != $itemsFirst ? new Cursor('before', $itemsFirstTarget) : null;
+        return $meta->first != $itemsFirst ? Cursor::before($itemsFirstTarget) : null;
     }
 
     protected function nextCursor($meta)
@@ -63,7 +63,7 @@ class QueryMeta
         $itemsLast = $this->items->last();
         $itemsLastTarget = $this->targetsManager->targetFromItem($itemsLast);
 
-        return $meta->last != $itemsLast ? new Cursor('after', $itemsLastTarget) : null;
+        return $meta->last != $itemsLast ? Cursor::after($itemsLastTarget) : null;
     }
 
     protected function currentCursor()
