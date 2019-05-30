@@ -8,11 +8,6 @@ class CursorPaginatorMacro
     protected $currentCursor;
     protected $perPage;
     protected $columns;
-    protected $queryMappings = [
-        'before' => Query\PaginationStrategy\QueryBefore::class,
-        'after'  => Query\PaginationStrategy\QueryAfter::class,
-        'around' => Query\PaginationStrategy\QueryAround::class
-    ];
 
     public function __construct(array $requestData, $perPage = 10, $columns = ['*'])
     {
@@ -26,7 +21,7 @@ class CursorPaginatorMacro
         $items = $this->resolveQuery($query)->get();
         $meta = $this->meta($query, $items);
 
-        return new CursorPaginator($items, 2, $meta);
+        return new CursorPaginator($items, $this->perPage, $meta);
     }
 
     public function setRequestData($requestData)
@@ -44,27 +39,18 @@ class CursorPaginatorMacro
 
     protected function setCurrentCursor()
     {
-        foreach (array_keys($this->queryMappings) as $direction) {
-            if ($target = array_get($this->requestData, $direction)) {
-                $this->currentCursor = new Cursor($direction, $target);
-                return;
-            }
-        }
+        $this->currentCursor = Cursor::fromRequest($this->requestData);
     }
 
     protected function resolveQuery($query)
     {
-        $class = $this->queryMappings[$this->currentCursor->direction];
-
-        return app()->makeWith($class, [
-            'query' => $query,
-            'perPage' => $this->perPage
-        ])->process($this->currentCursor->getParsedTarget());
+        return $this->currentCursor->paginationQuery($query, $this->perPage);
     }
 
     protected function meta($query, $items)
     {
-        return (new Query\QueryMeta($query, $items, $this->currentCursor))
+        $targetsManager = new TargetsManager($query);
+        return (new Query\QueryMeta($query, $items, $this->currentCursor, $targetsManager))
             ->meta();
     }
 }

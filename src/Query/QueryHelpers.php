@@ -59,6 +59,17 @@ trait QueryHelpers
         return $query;
     }
 
+    protected function orderColumnIsDate($query, $index) 
+    {
+        if (method_exists($query, 'getModel')) {
+            $column = $this->getOrderColumn($query, $index);
+            if (in_array($column, $query->getModel()->getDates())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected function getCleanQueryFrom($query)
     {
         if (method_exists($query, 'getModel')) {
@@ -78,6 +89,13 @@ trait QueryHelpers
     {
         if (method_exists($to, 'setEagerLoads') && method_exists($from, 'getEagerLoads')) {
             $to->setEagerLoads($from->getEagerLoads());
+        }
+    }
+
+    protected function removeEagerLoad($query) 
+    {
+        if (method_exists($query, 'setEagerLoads')) {
+            $query->setEagerLoads([]);
         }
     }
 

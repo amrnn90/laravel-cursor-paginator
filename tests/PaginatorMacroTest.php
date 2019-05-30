@@ -3,11 +3,9 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Amrnn90\CursorPaginator \ {
-    CursorPaginatorMacro,
-    CursorPaginator
-};
-
+use Amrnn90\CursorPaginator\CursorPaginatorMacro;
+use Amrnn90\CursorPaginator\CursorPaginator;
+use Amrnn90\CursorPaginator\Cursor;
 use Tests\Models\Reply;
 
 class PaginatorMacroTest extends TestCase
@@ -47,5 +45,21 @@ class PaginatorMacroTest extends TestCase
             ->toArray();
 
         $this->assertEquals([2, 3, 4], $paginatorData['data']->pluck('id')->all());
+    }
+
+    /** @test */
+    public function paginator_returns_first_page_if_request_has_no_cursor()
+    {
+        $request = [];
+
+        $this->paginatorMacro
+            ->setRequestData($request)
+            ->setPerPage(3);
+
+        $paginatorData = $this->paginatorMacro
+            ->process(Reply::orderBy('id'))
+            ->toArray();
+        $this->assertEquals([1,2,3], $paginatorData['data']->pluck('id')->all());
+        $this->assertEquals(new Cursor('after_i', 1), $paginatorData['current_page']);
     }
 }

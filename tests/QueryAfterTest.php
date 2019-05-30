@@ -125,21 +125,21 @@ class QueryAfterTest extends TestCase
         );
     }
 
-    /** @test */
-    public function it_detects_date_casts_on_models()
-    {
-        Reply::truncate();
-        foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-            factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
-        }
+    // /** @test */
+    // public function it_detects_date_casts_on_models()
+    // {
+    //     Reply::truncate();
+    //     foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
+    //         factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
+    //     }
 
-        $query = Reply::orderBy('created_at', 'asc');
-        $resultQuery = (new QueryAfter($query, 2))->process(Carbon::create(2008)->timestamp);
-        $this->assertEquals(
-            [2009, 2010],
-            $resultQuery->get()->pluck('created_at')->map->get('year')->all()
-        );
-    }
+    //     $query = Reply::orderBy('created_at', 'asc');
+    //     $resultQuery = (new QueryAfter($query, 2))->process(Carbon::create(2008)->timestamp);
+    //     $this->assertEquals(
+    //         [2009, 2010],
+    //         $resultQuery->get()->pluck('created_at')->map->get('year')->all()
+    //     );
+    // }
 
     /** @test */
     public function it_throws_exception_when_there_is_no_order()
