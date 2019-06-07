@@ -17,7 +17,7 @@ class PaginatorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(__DIR__ . '/config/cursor_paginator.php', 'cursor_paginator');
     }
 
     /**
@@ -27,7 +27,9 @@ class PaginatorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $macro = function ($perPage = 10, $options = []) {
+        $this->publish();
+
+        $macro = function ($perPage = null, $options = []) {
             $request = resolve(Request::class);
 
             return (new PaginatorMacro($request->all(), $perPage, $options))
@@ -36,5 +38,13 @@ class PaginatorServiceProvider extends ServiceProvider
 
         QueryBuilder::macro('cursorPaginate', $macro);
         EloquentBuilder::macro('cursorPaginate', $macro);
+    }
+
+
+    protected function publish()
+    {
+        $this->publishes([
+            __DIR__ . '/config/cursor_paginator.php' => config_path('cursor_paginator.php'),
+        ]);
     }
 }

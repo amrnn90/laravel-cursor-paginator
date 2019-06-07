@@ -18,12 +18,18 @@ class Cursor implements Jsonable, Arrayable
 
     static protected function queryMappings()
     {
+        $before = config('cursor_paginator.directions.before');
+        $before_i = config('cursor_paginator.directions.before_i');
+        $after = config('cursor_paginator.directions.after');
+        $after_i = config('cursor_paginator.directions.after_i');
+        $around = config('cursor_paginator.directions.around');
+
         return [
-            'before' => Query\PaginationStrategy\QueryBefore::class,
-            'before_i' => Query\PaginationStrategy\QueryBeforeInclusive::class,
-            'after'  => Query\PaginationStrategy\QueryAfter::class,
-            'after_i'  => Query\PaginationStrategy\QueryAfterInclusive::class,
-            'around' => Query\PaginationStrategy\QueryAround::class
+            $before => Query\PaginationStrategy\QueryBefore::class,
+            $before_i => Query\PaginationStrategy\QueryBeforeInclusive::class,
+            $after  => Query\PaginationStrategy\QueryAfter::class,
+            $after_i  => Query\PaginationStrategy\QueryAfterInclusive::class,
+            $around => Query\PaginationStrategy\QueryAround::class
         ];
     }
 

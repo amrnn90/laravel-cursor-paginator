@@ -95,4 +95,39 @@ class MacroTest extends TestCase
 
         $this->assertEquals(Cursor::before(Carbon::create(2006)->timestamp), $paginatorData['previous_page']);
     }
+
+    /** @test */
+    public function maps_cursor_directions_from_config()
+    {
+        config(['cursor_paginator.directions' => [
+            'before' => 'b',
+            'around' => 'ar',
+            'before_i' => 'bi',
+        ]]);
+
+        $this->request(['b' => 5]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $this->assertEquals(['direction' => 'b', 'target' => 5], $paginatorData['current_page']->toArray());
+
+        $this->request(['bi' => 5]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $this->assertEquals(['direction' => 'bi', 'target' => 5], $paginatorData['current_page']->toArray());
+
+        $this->request(['ar' => 5]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $this->assertEquals(['direction' => 'ar', 'target' => 5], $paginatorData['current_page']->toArray());
+    }
+
+    /** @test */
+    public function use_defaut_per_page_from_config()
+    {
+        $this->request(['before' => 5]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate()->toArray();
+        $this->assertEquals(10, $paginatorData['per_page']);
+
+        config(['cursor_paginator.per_page' => 20]);
+        $this->request(['before' => 5]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate()->toArray();
+        $this->assertEquals(20, $paginatorData['per_page']);
+    }
 }

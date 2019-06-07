@@ -9,7 +9,7 @@ class Macro
     protected $perPage;
     protected $options;
 
-    public function __construct(array $requestData, $perPage = 10, $options = [])
+    public function __construct(array $requestData, $perPage, $options = [])
     {
         $this->setRequestData($requestData);
         $this->setPerPage($perPage);
@@ -33,7 +33,7 @@ class Macro
 
     public function setPerPage($perPage)
     {
-        $this->perPage = $perPage;
+        $this->perPage = $perPage ?? config('cursor_paginator.per_page');
         return $this;
     }
 
