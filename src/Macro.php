@@ -2,18 +2,18 @@
 
 namespace Amrnn90\CursorPaginator;
 
-class CursorPaginatorMacro
+class Macro
 {
     protected $requestData;
     protected $currentCursor;
     protected $perPage;
-    protected $columns;
+    protected $options;
 
-    public function __construct(array $requestData, $perPage = 10, $columns = ['*'])
+    public function __construct(array $requestData, $perPage = 10, $options = [])
     {
         $this->setRequestData($requestData);
         $this->setPerPage($perPage);
-        $this->columns = $columns;
+        $this->options = $options;
     }
 
     public function process($query)
@@ -44,12 +44,12 @@ class CursorPaginatorMacro
 
     protected function resolveQuery($query)
     {
-        return $this->currentCursor->paginationQuery($query, $this->perPage);
+        return $this->currentCursor->paginationQuery($query, $this->perPage, $this->options);
     }
 
     protected function meta($query, $items)
     {
-        $targetsManager = new TargetsManager($query);
+        $targetsManager = new TargetsManager($query, $this->options);
         return (new Query\QueryMeta($query, $items, $this->currentCursor, $targetsManager))
             ->meta();
     }

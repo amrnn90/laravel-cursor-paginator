@@ -30,7 +30,7 @@ class TargetsManager
         if ($target !== '0' && empty($target)) return [];
 
         $result = [];
-        foreach (explode(',', $target) as $index => $target) {
+        foreach (explode(',', (string)$target) as $index => $target) {
             $result[] = $this->parseSingle($target, $index);
         }
         return $result;
@@ -40,7 +40,7 @@ class TargetsManager
     {
         $targets = [];
         foreach ($this->getOrderColumnList($this->query) as $column) {
-            $targets[] = $item[$column];
+            $targets[] = $this->extractColumnFromItem($item, $column);
         }
         return $this->serialize($targets);
     }
@@ -78,5 +78,13 @@ class TargetsManager
         return is_a($target, DateTimeInterface::class) ||
             in_array($this->getOrderColumn($this->query, $index), $this->dates) ||
             $this->orderColumnIsDate($this->query, $index);
+    }
+
+    protected function extractColumnFromItem($item, $column) 
+    {
+        if (is_a($item, \stdClass::class)) {
+            return $item->$column;
+        }
+        return $item[$column];
     }
 }

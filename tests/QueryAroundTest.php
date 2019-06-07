@@ -166,23 +166,7 @@ class QueryAroundTest extends TestCase
             $resultQuery->get()->pluck('created_at')->map->get('year')->all()
         );
     }
-
-    // /** @test */
-    // public function it_detects_date_casts_on_models()
-    // {
-    //     Reply::truncate();
-    //     foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-    //         factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
-    //     }
-
-    //     $query = Reply::orderBy('created_at', 'asc');
-    //     $resultQuery = (new QueryAround($query, 3))->process(Carbon::create(2008)->timestamp);
-    //     $this->assertEquals(
-    //         [2006, 2008, 2009],
-    //         $resultQuery->get()->pluck('created_at')->map->get('year')->all()
-    //     );
-    // }
-
+    
     /** @test */
     public function it_throws_exception_when_there_is_no_order()
     {

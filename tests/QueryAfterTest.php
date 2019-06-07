@@ -125,22 +125,6 @@ class QueryAfterTest extends TestCase
         );
     }
 
-    // /** @test */
-    // public function it_detects_date_casts_on_models()
-    // {
-    //     Reply::truncate();
-    //     foreach ([2006, 2004, 2008, 2010, 2002, 2009, 2011] as $year) {
-    //         factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
-    //     }
-
-    //     $query = Reply::orderBy('created_at', 'asc');
-    //     $resultQuery = (new QueryAfter($query, 2))->process(Carbon::create(2008)->timestamp);
-    //     $this->assertEquals(
-    //         [2009, 2010],
-    //         $resultQuery->get()->pluck('created_at')->map->get('year')->all()
-    //     );
-    // }
-
     /** @test */
     public function it_throws_exception_when_there_is_no_order()
     {
@@ -215,28 +199,28 @@ class QueryAfterTest extends TestCase
         );
     }
 
-        /** @test */
-        public function it_accepts_multi_column_pagination_targets()
-        {
-            Reply::truncate();
-            foreach ([1, 2, 3, 4,  1, 2, 3, 4,  1, 2, 3, 4,] as $likes) {
-                factory(Reply::class)->create(['likes_count' => $likes]);
-            }
-    
-            $query = Reply::orderBy('likes_count')->orderBy('id');
-            $resultQuery = (new QueryAfter($query, 3))->process([1, 5]);
-    
-            $this->assertEquals(
-                [9, 2, 6],
-                $resultQuery->pluck('id')->all()
-            );
-
-            $query = Reply::orderBy('likes_count', 'desc')->orderBy('id', 'desc');
-            $resultQuery = (new QueryAfter($query, 3))->process([4, 8]);
-    
-            $this->assertEquals(
-                [4, 11, 7],
-                $resultQuery->pluck('id')->all()
-            );
+    /** @test */
+    public function it_accepts_multi_column_pagination_targets()
+    {
+        Reply::truncate();
+        foreach ([1, 2, 3, 4,  1, 2, 3, 4,  1, 2, 3, 4,] as $likes) {
+            factory(Reply::class)->create(['likes_count' => $likes]);
         }
+
+        $query = Reply::orderBy('likes_count')->orderBy('id');
+        $resultQuery = (new QueryAfter($query, 3))->process([1, 5]);
+
+        $this->assertEquals(
+            [9, 2, 6],
+            $resultQuery->pluck('id')->all()
+        );
+
+        $query = Reply::orderBy('likes_count', 'desc')->orderBy('id', 'desc');
+        $resultQuery = (new QueryAfter($query, 3))->process([4, 8]);
+
+        $this->assertEquals(
+            [4, 11, 7],
+            $resultQuery->pluck('id')->all()
+        );
+    }
 }

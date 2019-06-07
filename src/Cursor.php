@@ -92,9 +92,9 @@ class Cursor implements Jsonable, Arrayable
         return json_encode($this->toArray(), $options);
     }
 
-    public function paginationQuery($query, $perPage)
+    public function paginationQuery($query, $perPage, $targetsManagerOptions = [])
     {
-        $targetsManager = new TargetsManager($query);
+        $targetsManager = new TargetsManager($query, $targetsManagerOptions);
         $paginationQuery = resolve(static::queryMappings()[$this->direction]);
         $paginationQuery
             ->setPerPage($perPage)

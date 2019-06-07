@@ -5,7 +5,7 @@ namespace Amrnn90\CursorPaginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Amrnn90\CursorPaginator\CursorPaginatorMacro;
+use Amrnn90\CursorPaginator\Macro as PaginatorMacro;
 use Illuminate\Http\Request;
 
 class PaginatorServiceProvider extends ServiceProvider
@@ -27,13 +27,11 @@ class PaginatorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $request = $this->app->make(Request::class);
+        $macro = function ($perPage = 10, $options = []) {
+            $request = resolve(Request::class);
 
-        $macro = function ($perPage = 10, $columns = ['*']) use ($request) {
-            return (new CursorPaginatorMacro($request->all(), [
-                'perPage' => $perPage,
-                'columns' => $columns
-            ]))->process($this);
+            return (new PaginatorMacro($request->all(), $perPage, $options))
+                ->process($this);
         };
 
         QueryBuilder::macro('cursorPaginate', $macro);
