@@ -101,21 +101,25 @@ class MacroTest extends TestCase
     {
         config(['cursor_paginator.directions' => [
             'before' => 'b',
-            'around' => 'ar',
             'before_i' => 'bi',
+            'after' => 'a',
+            'after_i' => 'ai',
+            'around' => 'ar',
         ]]);
 
         $this->request(['b' => 5]);
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
         $this->assertEquals(['direction' => 'b', 'target' => 5], $paginatorData['current_page']->toArray());
 
-        $this->request(['bi' => 5]);
+        $this->request(['a' => 5]);
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
-        $this->assertEquals(['direction' => 'bi', 'target' => 5], $paginatorData['current_page']->toArray());
+        $this->assertEquals(['direction' => 'a', 'target' => 5], $paginatorData['current_page']->toArray());
 
         $this->request(['ar' => 5]);
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
         $this->assertEquals(['direction' => 'ar', 'target' => 5], $paginatorData['current_page']->toArray());
+        $this->assertEquals(['direction' => 'ai', 'target' => 1], $paginatorData['first_page']->toArray());
+        $this->assertEquals(['direction' => 'bi', 'target' => 10], $paginatorData['last_page']->toArray());
     }
 
     /** @test */

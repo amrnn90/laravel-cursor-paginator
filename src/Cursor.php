@@ -16,24 +16,18 @@ class Cursor implements Jsonable, Arrayable
         $this->target = $target;
     }
 
-    static protected function queryMappings()
+    protected static function queryMappings()
     {
-        $before = config('cursor_paginator.directions.before');
-        $before_i = config('cursor_paginator.directions.before_i');
-        $after = config('cursor_paginator.directions.after');
-        $after_i = config('cursor_paginator.directions.after_i');
-        $around = config('cursor_paginator.directions.around');
-
         return [
-            $before => Query\PaginationStrategy\QueryBefore::class,
-            $before_i => Query\PaginationStrategy\QueryBeforeInclusive::class,
-            $after  => Query\PaginationStrategy\QueryAfter::class,
-            $after_i  => Query\PaginationStrategy\QueryAfterInclusive::class,
-            $around => Query\PaginationStrategy\QueryAround::class
+            static::beforeDirection() => Query\PaginationStrategy\QueryBefore::class,
+            static::beforeInclusiveDirection() => Query\PaginationStrategy\QueryBeforeInclusive::class,
+            static::afterDirection()  => Query\PaginationStrategy\QueryAfter::class,
+            static::afterInclusiveDirection()  => Query\PaginationStrategy\QueryAfterInclusive::class,
+            static::aroundDirection() => Query\PaginationStrategy\QueryAround::class
         ];
     }
 
-    static public function fromRequest($requestData)
+    public static function fromRequest($requestData)
     {
         foreach (array_keys(static::queryMappings()) as $direction) {
             if ($target = array_get($requestData, $direction)) {
@@ -43,29 +37,59 @@ class Cursor implements Jsonable, Arrayable
         return static::afterInclusive(null);
     }
 
-    static public function before($target)
+    public static function before($target)
     {
-        return new static('before', $target);
+        return new static(static::beforeDirection(), $target);
     }
 
-    static public function beforeInclusive($target)
+    public static function beforeInclusive($target)
     {
-        return new static('before_i', $target);
+        return new static(static::beforeInclusiveDirection(), $target);
     }
 
-    static public function after($target)
+    public static function after($target)
     {
-        return new static('after', $target);
+        return new static(static::afterDirection(), $target);
     }
 
-    static public function afterInclusive($target)
+    public static function afterInclusive($target)
     {
-        return new static('after_i', $target);
+        return new static(static::afterInclusiveDirection(), $target);
     }
 
-    static public function around($target)
+    public static function around($target)
     {
-        return new static('around', $target);
+        return new static(static::aroundDirection(), $target);
+    }
+
+    protected static function mapDirection($direction)
+    {
+        return config("cursor_paginator.directions.$direction");
+    }
+    
+    protected static function beforeDirection()
+    {
+        return static::mapDirection('before');
+    }
+
+    protected static function beforeInclusiveDirection()
+    {
+        return static::mapDirection('before_i');
+    }
+
+    protected static function afterDirection()
+    {
+        return static::mapDirection('after');
+    }
+
+    protected static function afterInclusiveDirection()
+    {
+        return static::mapDirection('after_i');
+    }
+
+    protected static function aroundDirection()
+    {
+        return static::mapDirection('around');
     }
 
     public function setTarget($target)
