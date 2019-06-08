@@ -136,7 +136,7 @@ Post::orderBy('created_at')->cursorPaginate()
 
 ```
 
-## config
+## Config
 
 ```php
 return [
