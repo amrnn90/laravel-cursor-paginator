@@ -23,5 +23,12 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Amrnn90\\CursorPaginator\\PaginatorServiceProvider"
+            ]
+        }
     }
 }
