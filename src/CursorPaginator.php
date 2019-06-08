@@ -130,6 +130,7 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         return [
             'data' => $this->getCollection(),
             'per_page' => $this->perPage(),
+            'total' => $this->meta['total'],
 
             'current_page' => $this->meta['current'],
             'first_page' => $this->meta['first'],

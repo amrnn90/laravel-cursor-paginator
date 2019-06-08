@@ -155,6 +155,7 @@ class CursorPaginatorTest extends TestCase
             'next_page_url' => 'http://localhost?after=4',
             'prev_page_url' => 'http://localhost?before=2',
             'path' => 'http://localhost',
+            'total' => 10
         ], $paginator->toArray());
     }
 
