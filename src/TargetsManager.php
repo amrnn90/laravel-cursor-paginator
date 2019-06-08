@@ -1,8 +1,8 @@
 <?php
 
-namespace Amrnn90\CursorPaginator;
+namespace Amrnn\CursorPaginator;
 
-use Amrnn90\CursorPaginator\Query\QueryHelpers;
+use Amrnn\CursorPaginator\Query\QueryHelpers;
 use DateTimeInterface;
 use Carbon\Carbon;
 

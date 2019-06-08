@@ -1,5 +1,5 @@
 <?php 
 
-namespace Amrnn90\CursorPaginator\Exceptions;
+namespace Amrnn\CursorPaginator\Exceptions;
 
 class CursorPaginatorException extends \Exception {}

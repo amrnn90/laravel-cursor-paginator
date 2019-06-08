@@ -19,13 +19,13 @@ Easily have cursor based pagination in your Eloquent models and query builders, 
 First install the package via composer:
 
 ```sh
-composer require amrnn90/laravel-cursor-paginator
+composer require amrnn/laravel-cursor-paginator
 ```
 
 You can optionally publish the config file:
 
 ```sh
-php artisan vendor:publish --provider="Amrnn90\CursorPaginator\PaginatorServiceProvider"
+php artisan vendor:publish --provider="Amrnn\CursorPaginator\PaginatorServiceProvider"
 ```
 
 ### Register service provider
@@ -36,7 +36,7 @@ The package automatically registers itself, but if you need to you can add the s
 
 'providers' => [
     // ...
-    Amrnn90\CursorPaginator\PaginatorServiceProvider::class,
+    Amrnn\CursorPaginator\PaginatorServiceProvider::class,
 ];
 ```
 

@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Amrnn90\CursorPaginator\Query\PaginationStrategy\QueryAround;
-use Amrnn90\CursorPaginator\Exceptions\CursorPaginatorException;
+use Amrnn\CursorPaginator\Query\PaginationStrategy\QueryAround;
+use Amrnn\CursorPaginator\Exceptions\CursorPaginatorException;
 use Tests\Models\Reply;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

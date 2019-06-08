@@ -1,9 +1,9 @@
 <?php
 
-namespace Amrnn90\CursorPaginator\Query;
+namespace Amrnn\CursorPaginator\Query;
 
 use Illuminate\Support\Facades\DB;
-use Amrnn90\CursorPaginator\Exceptions\CursorPaginatorException;
+use Amrnn\CursorPaginator\Exceptions\CursorPaginatorException;
 
 trait QueryHelpers
 {

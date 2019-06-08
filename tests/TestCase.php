@@ -16,7 +16,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            'Amrnn90\CursorPaginator\PaginatorServiceProvider'
+            'Amrnn\CursorPaginator\PaginatorServiceProvider'
         ];
     }
 }

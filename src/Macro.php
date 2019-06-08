@@ -1,6 +1,6 @@
 <?php
 
-namespace Amrnn90\CursorPaginator;
+namespace Amrnn\CursorPaginator;
 
 class Macro
 {

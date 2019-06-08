@@ -4,9 +4,9 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Models\Reply;
-use Amrnn90\CursorPaginator\Query\QueryMeta;
-use Amrnn90\CursorPaginator\Cursor;
-use Amrnn90\CursorPaginator\TargetsManager;
+use Amrnn\CursorPaginator\Query\QueryMeta;
+use Amrnn\CursorPaginator\Cursor;
+use Amrnn\CursorPaginator\TargetsManager;
 
 class QueryMetaTest extends TestCase
 {

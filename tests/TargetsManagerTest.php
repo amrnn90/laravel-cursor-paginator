@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Models\Reply;
-use Amrnn90\CursorPaginator\TargetsManager;
+use Amrnn\CursorPaginator\TargetsManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 

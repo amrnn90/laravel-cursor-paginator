@@ -1,8 +1,8 @@
 <?php
 
-namespace Amrnn90\CursorPaginator\Query\PaginationStrategy;
+namespace Amrnn\CursorPaginator\Query\PaginationStrategy;
 
-use Amrnn90\CursorPaginator\Query\QueryHelpers;
+use Amrnn\CursorPaginator\Query\QueryHelpers;
 use Carbon\Carbon;
 
 abstract class PaginationQueryAbstract

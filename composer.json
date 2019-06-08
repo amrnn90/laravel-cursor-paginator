@@ -1,5 +1,5 @@
 {
-    "name": "amrnn90/laravel-cursor-paginator",
+    "name": "amrnn/laravel-cursor-paginator",
     "description": "Cursor pagination for Laravel",
     "keywords": ["laravel", "eloquent", "cursor", "pagination"],
     "type": "library",
@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Amrnn90\\CursorPaginator\\": "src"
+            "Amrnn\\CursorPaginator\\": "src"
         }
     },
     "autoload-dev": {
@@ -28,7 +28,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Amrnn90\\CursorPaginator\\PaginatorServiceProvider"
+                "Amrnn\\CursorPaginator\\PaginatorServiceProvider"
             ]
         }
     }

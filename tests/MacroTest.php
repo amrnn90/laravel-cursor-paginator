@@ -7,8 +7,8 @@ use Tests\Models\Reply;
 use Illuminate\Http\Request;
 use Mockery as m;
 use Carbon\Carbon;
-use Amrnn90\CursorPaginator\Cursor;
-use Amrnn90\CursorPaginator\CursorPaginator;
+use Amrnn\CursorPaginator\Cursor;
+use Amrnn\CursorPaginator\CursorPaginator;
 use Illuminate\Support\Facades\DB;
 
 class MacroTest extends TestCase

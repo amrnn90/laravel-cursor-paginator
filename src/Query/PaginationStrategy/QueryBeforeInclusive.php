@@ -1,6 +1,6 @@
 <?php
 
-namespace Amrnn90\CursorPaginator\Query\PaginationStrategy;
+namespace Amrnn\CursorPaginator\Query\PaginationStrategy;
 
 class QueryBeforeInclusive extends QueryBefore
 {

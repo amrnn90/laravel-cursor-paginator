@@ -3,7 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Amrnn90\CursorPaginator\Query\PaginationStrategy\QueryBeforeInclusive;
+use Amrnn\CursorPaginator\Query\PaginationStrategy\QueryBeforeInclusive;
 use Tests\Models\Reply;
 
 class QueryBeforeInclusiveTest extends TestCase

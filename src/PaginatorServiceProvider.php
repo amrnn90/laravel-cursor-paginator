@@ -1,11 +1,11 @@
 <?php
 
-namespace Amrnn90\CursorPaginator;
+namespace Amrnn\CursorPaginator;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Amrnn90\CursorPaginator\Macro as PaginatorMacro;
+use Amrnn\CursorPaginator\Macro as PaginatorMacro;
 use Illuminate\Http\Request;
 
 class PaginatorServiceProvider extends ServiceProvider

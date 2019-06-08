@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Amrnn90\CursorPaginator\CursorPaginator;
-use Amrnn90\CursorPaginator\Cursor;
+use Amrnn\CursorPaginator\CursorPaginator;
+use Amrnn\CursorPaginator\Cursor;
 
 class CursorPaginatorTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Amrnn90\CursorPaginator\Query;
+namespace Amrnn\CursorPaginator\Query;
 
-use Amrnn90\CursorPaginator\Cursor;
-use Amrnn90\CursorPaginator\TargetsManager;
+use Amrnn\CursorPaginator\Cursor;
+use Amrnn\CursorPaginator\TargetsManager;
 
 class QueryMeta
 {
