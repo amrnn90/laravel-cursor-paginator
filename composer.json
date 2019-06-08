@@ -1,6 +1,7 @@
 {
     "name": "amrnn90/laravel-cursor-paginator",
     "description": "Cursor pagination for Laravel",
+    "keywords": ["laravel", "eloquent", "cursor", "pagination"],
     "type": "library",
     "require": {},
     "require-dev": {
