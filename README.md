@@ -2,6 +2,8 @@
 
 Easily have cursor based pagination in your Eloquent models and query builders, read [this article](https://use-the-index-luke.com/sql/partial-results/fetch-next-page) to understand the benifits of cursor pagination and the problems it attempts to solve.
 
+There's another [cursor-pagination](https://github.com/juampi92/cursor-pagination) package but unfortunately it doesn't support retrieving previous pages or multi-column ordering, that's why I decided to create this one.
+
 ### Features
 
 * Automatically paginates based on columns ordering.
