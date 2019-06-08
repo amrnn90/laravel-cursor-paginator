@@ -134,4 +134,13 @@ class MacroTest extends TestCase
         $paginatorData = Reply::orderBy('id')->cursorPaginate()->toArray();
         $this->assertEquals(20, $paginatorData['per_page']);
     }
+
+    /** @test */
+    public function allows_selecting_columns()
+    {
+        $this->request(['before' => 5]);
+        $paginatorData = Reply::select('id')->orderBy('id')->cursorPaginate()->toArray();
+
+        $this->assertEquals(['id' => 1], $paginatorData['data'][0]->toArray());
+    }
 }

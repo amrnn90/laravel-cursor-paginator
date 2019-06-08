@@ -78,7 +78,7 @@ class QueryMeta
     {
         $query = $this->query;
 
-        $count = with(clone $query)->selectRaw('COUNT(*) as `count`')->first()->count;
+        $count = with(clone $query)->count();
         $firstLastQuery = $this->wrapQuery(
             with(clone $query)->limit(1)->union(
                 with($this->reverseQueryOrders(clone $query))->limit(1)
