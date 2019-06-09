@@ -64,14 +64,15 @@ class MacroTest extends TestCase
             factory(Reply::class)->create(['created_at' => Carbon::create($year)]);
         }
 
-        $this->request(['around' => Carbon::create(2008)->timestamp]);
+        $this->request(['before_i' => Carbon::create(2008)->timestamp]);
 
         $paginatorData = Reply::orderBy('created_at')->cursorPaginate(3)->toArray();
 
         $this->assertEquals(
-            [2006, 2008, 2009],
+            [2004, 2006, 2008],
             $paginatorData['data']->pluck('created_at')->map->get('year')->all()
         );
+        $this->assertEquals(2002, $paginatorData['next_item']->created_at->get('year'));
     }
 
     /** @test */
@@ -103,8 +104,7 @@ class MacroTest extends TestCase
             'before' => 'b',
             'before_i' => 'bi',
             'after' => 'a',
-            'after_i' => 'ai',
-            'around' => 'ar',
+            'after_i' => 'ai'
         ]]);
 
         $this->request(['b' => 5]);
@@ -115,9 +115,6 @@ class MacroTest extends TestCase
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
         $this->assertEquals(['direction' => 'a', 'target' => 5], $paginatorData['current_page']->toArray());
 
-        $this->request(['ar' => 5]);
-        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
-        $this->assertEquals(['direction' => 'ar', 'target' => 5], $paginatorData['current_page']->toArray());
         $this->assertEquals(['direction' => 'ai', 'target' => 1], $paginatorData['first_page']->toArray());
         $this->assertEquals(['direction' => 'bi', 'target' => 10], $paginatorData['last_page']->toArray());
     }
@@ -142,5 +139,17 @@ class MacroTest extends TestCase
         $paginatorData = Reply::select('id')->orderBy('id')->cursorPaginate()->toArray();
 
         $this->assertEquals(['id' => 1], $paginatorData['data'][0]->toArray());
+    }
+
+    /** @test */
+    public function paginator_result_contains_next_item()
+    {
+        $this->request(['after_i' => 1]);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $items = Reply::whereIn('id', [1,2,3])->get();
+        $nextItem = Reply::find(4);
+
+        $this->assertEquals($items, $paginatorData['data']);
+        $this->assertEquals($nextItem, $paginatorData['next_item']);
     }
 }

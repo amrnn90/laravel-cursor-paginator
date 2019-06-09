@@ -16,7 +16,6 @@ There's another [cursor-pagination](https://github.com/juampi92/cursor-paginatio
   * **before_i**: returns the items before the cusors (including the item at the cursor).
   * **after**: returnsthe items after the cursor.
   * **after_i**: return the items after the cursor (including the item at teh cursor).
-  * **around**: returns the items around the cursor (the item at the cursor is at the center of the results).
 
 ## Installation
 
@@ -72,6 +71,11 @@ which will return something like this:
     * total items in result set for your query
     */  
     "total": 10,
+
+    /**
+    * the following boundary item if you continue to paginate in this direction
+    */
+    "next_item": { "id": 5 },
 
     /**
     * navigation urls, you can change the cursor names in the url query string by
@@ -160,8 +164,7 @@ return [
         'before' => 'before',
         'before_i' => 'before_i',
         'after' => 'after',
-        'after_i' => 'after_i',
-        'around' => 'around'
+        'after_i' => 'after_i'
     ],
 
     /**

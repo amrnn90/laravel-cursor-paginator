@@ -4,6 +4,7 @@ namespace Amrnn\CursorPaginator;
 
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
+use Amrnn\CursorPaginator\Exceptions\CursorPaginatorException;
 
 class Cursor implements Jsonable, Arrayable
 {
@@ -23,7 +24,6 @@ class Cursor implements Jsonable, Arrayable
             static::beforeInclusiveDirection() => Query\PaginationStrategy\QueryBeforeInclusive::class,
             static::afterDirection()  => Query\PaginationStrategy\QueryAfter::class,
             static::afterInclusiveDirection()  => Query\PaginationStrategy\QueryAfterInclusive::class,
-            static::aroundDirection() => Query\PaginationStrategy\QueryAround::class
         ];
     }
 
@@ -57,16 +57,11 @@ class Cursor implements Jsonable, Arrayable
         return new static(static::afterInclusiveDirection(), $target);
     }
 
-    public static function around($target)
-    {
-        return new static(static::aroundDirection(), $target);
-    }
-
     protected static function mapDirection($direction)
     {
         return config("cursor_paginator.directions.$direction");
     }
-    
+
     protected static function beforeDirection()
     {
         return static::mapDirection('before');
@@ -85,11 +80,6 @@ class Cursor implements Jsonable, Arrayable
     protected static function afterInclusiveDirection()
     {
         return static::mapDirection('after_i');
-    }
-
-    protected static function aroundDirection()
-    {
-        return static::mapDirection('around');
     }
 
     public function setTarget($target)
@@ -122,14 +112,40 @@ class Cursor implements Jsonable, Arrayable
         return json_encode($this->toArray(), $options);
     }
 
-    public function paginationQuery($query, $perPage, $targetsManagerOptions = [])
+    public function paginate($query, $perPage, $targetsManagerOptions = [])
     {
         $targetsManager = new TargetsManager($query, $targetsManagerOptions);
         $paginationQuery = resolve(static::queryMappings()[$this->direction]);
+
+        // we fetch perPage + 1 items in order to save next item in meta
         $paginationQuery
-            ->setPerPage($perPage)
+            ->setPerPage($perPage + 1)
             ->setQuery($query);
 
-        return $paginationQuery->process($targetsManager->parse($this->target));
+        $items = $paginationQuery->process($targetsManager->parse($this->target))->get();
+
+        return $this->removeNextItemFromItems($items, $perPage);
+    }
+
+    protected function removeNextItemFromItems($items, $perPage)
+    {
+        if ($items->count() > $perPage) {
+            switch ($this->direction) {
+                case $this->beforeDirection():
+                case $this->beforeInclusiveDirection():
+                    $nextItem = $items->first();
+                    $currentItems = $items->slice(1);
+                    break;
+                case $this->afterDirection():
+                case $this->afterInclusiveDirection():
+                    $nextItem = $items->last();
+                    $currentItems = $items->slice(0, $items->count() - 1);
+                    break;
+                default:
+                    throw new CursorPaginatorException();
+            }
+            return [$currentItems, $nextItem];
+        }
+        return [$items, null];
     }
 }

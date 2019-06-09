@@ -118,7 +118,6 @@ class CursorPaginatorTest extends TestCase
 
         $paginator = new CursorPaginator([2, 3, 4], 3, $this->meta(['next' => new Cursor('after', null)]));
         $this->assertNull($paginator->nextPageUrl());
-
     }
 
     /** @test */
@@ -139,7 +138,8 @@ class CursorPaginatorTest extends TestCase
             'next' => new Cursor('after', 4),
             'previous' => new Cursor('before', 2),
             'first' => new Cursor('after_i', 1),
-            'last' => new Cursor('before_i', 10)
+            'last' => new Cursor('before_i', 10),
+            'next_item' => 1
         ]));
 
         $this->assertEquals([
@@ -155,7 +155,8 @@ class CursorPaginatorTest extends TestCase
             'next_page_url' => 'http://localhost?after=4',
             'prev_page_url' => 'http://localhost?before=2',
             'path' => 'http://localhost',
-            'total' => 10
+            'total' => 10,
+            'next_item' => 1
         ], $paginator->toArray());
     }
 

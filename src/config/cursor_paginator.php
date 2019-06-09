@@ -18,7 +18,6 @@ return [
         'before_i' => 'before_i',
         'after' => 'after',
         'after_i' => 'after_i',
-        'around' => 'around'
     ],
 
     /**

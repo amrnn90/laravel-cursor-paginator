@@ -13,14 +13,16 @@ class QueryMeta
     protected $items;
     protected $currentCursor;
     protected $targetsManager;
+    protected $nextItem;
 
-    public function __construct($query, $items, $currentCursor, TargetsManager $targetsManager)
+    public function __construct($query, $items, $currentCursor, TargetsManager $targetsManager, $nextItem = null)
     {
         $this->ensureQueryIsOrdered($query);
         $this->query = clone $query;
         $this->items = $items;
         $this->currentCursor = $currentCursor;
         $this->targetsManager = $targetsManager;
+        $this->nextItem = $nextItem;
     }
 
     public function meta()
@@ -34,7 +36,8 @@ class QueryMeta
             'last' => $this->lastItemCursor($meta),
             'previous' => $this->previousCursor($meta),
             'next' => $this->nextCursor($meta),
-            'current' => $this->currentCursor() ?? $firstItemCursor
+            'current' => $this->currentCursor() ?? $firstItemCursor,
+            'next_item' => $this->nextItem
         ];
     }
 

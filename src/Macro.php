@@ -18,10 +18,10 @@ class Macro
 
     public function process($query)
     {
-        $items = $this->resolveQuery($query)->get();
-        $meta = $this->meta($query, $items);
+        list($currentItems, $nextItem) = $this->resolveQuery($query);
+        $meta = $this->meta($query, $currentItems, $nextItem);
 
-        return new CursorPaginator($items, $this->perPage, $meta);
+        return new CursorPaginator($currentItems, $this->perPage, $meta);
     }
 
     public function setRequestData($requestData)
@@ -44,13 +44,13 @@ class Macro
 
     protected function resolveQuery($query)
     {
-        return $this->currentCursor->paginationQuery($query, $this->perPage, $this->options);
+        return $this->currentCursor->paginate($query, $this->perPage, $this->options);
     }
 
-    protected function meta($query, $items)
+    protected function meta($query, $items, $nextItem)
     {
         $targetsManager = new TargetsManager($query, $this->options);
-        return (new Query\QueryMeta($query, $items, $this->currentCursor, $targetsManager))
+        return (new Query\QueryMeta($query, $items, $this->currentCursor, $targetsManager, $nextItem))
             ->meta();
     }
 }

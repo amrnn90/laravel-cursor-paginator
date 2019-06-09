@@ -22,7 +22,7 @@ class QueryMetaTest extends TestCase
     public function  it_gives_total_count()
     {
         $query = Reply::orderBy('id');
-        $items = Reply::whereIn('id', [2,3,4])->get()->sortBy('id');
+        $items = Reply::whereIn('id', [2, 3, 4])->get()->sortBy('id');
         $cursor = new Cursor('before', 5);
         $targetsManager = new TargetsManager($query);
 
@@ -34,11 +34,12 @@ class QueryMetaTest extends TestCase
     public function  it_gives_correct_meta()
     {
         $query = Reply::orderBy('id')->orderBy('created_at');
-        $items = Reply::whereIn('id', [2,3,4])->get()->sortBy('id');
+        $items = Reply::whereIn('id', [2, 3, 4])->get()->sortBy('id');
         $cursor = new Cursor('before', 5);
         $targetsManager = new TargetsManager($query);
+        $nextItem = Reply::find(1);
 
-        $meta = (new QueryMeta($query, $items, $cursor, $targetsManager))->meta();
+        $meta = (new QueryMeta($query, $items, $cursor, $targetsManager, $nextItem))->meta();
 
         $first = Reply::first();
         $last = Reply::latest()->first();
@@ -51,7 +52,8 @@ class QueryMetaTest extends TestCase
             'last' => new Cursor('before_i', "10,{$last->created_at->timestamp}"),
             'previous' => new Cursor('before', "2,{$previous->created_at->timestamp}"),
             'next' => new Cursor('after', "4,{$next->created_at->timestamp}"),
-            'current' => $cursor
+            'current' => $cursor,
+            'next_item' => $nextItem
         ], $meta);
     }
 
@@ -59,7 +61,7 @@ class QueryMetaTest extends TestCase
     public function it_returns_null_for_previous_if_there_are_no_previous_results()
     {
         $query = Reply::orderBy('id');
-        $items = Reply::whereIn('id', [1,2,3])->get()->sortBy('id');
+        $items = Reply::whereIn('id', [1, 2, 3])->get()->sortBy('id');
         $cursor = new Cursor('after_i', 1);
         $targetsManager = new TargetsManager($query);
         $meta = (new QueryMeta($query, $items, $cursor, $targetsManager))->meta();
@@ -77,5 +79,19 @@ class QueryMetaTest extends TestCase
         $meta = (new QueryMeta($query, $items, $cursor, $targetsManager))->meta();
 
         $this->assertNull($meta['next']);
+    }
+
+    /** @test */
+    public function it_gives_next_item()
+    {
+        $query = Reply::orderBy('id');
+        $items = Reply::whereIn('id', [1, 2, 3])->get()->sortBy('id');
+        $nextItem = Reply::find('id', 4);
+        $cursor = new Cursor('after_i', 1);
+        $targetsManager = New TargetsManager($query);
+        $meta = (new QueryMeta($query, $items, $cursor, $targetsManager, $nextItem))->meta();
+
+        $this->assertEquals($nextItem, $meta['next_item']);
+        
     }
 }
