@@ -67,6 +67,7 @@ class TargetsManager
         if ($this->isDateTarget($target, $index)) {
             if (filter_var($target, FILTER_VALIDATE_INT)) {
                 $target = (int)$target;
+                return Carbon::createFromTimestamp($target);
             }
             return Carbon::parse($target);
         }
