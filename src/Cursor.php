@@ -30,7 +30,7 @@ class Cursor implements Jsonable, Arrayable
     public static function fromRequest($requestData)
     {
         foreach (array_keys(static::queryMappings()) as $direction) {
-            if ($target = array_get($requestData, $direction)) {
+            if ($target = \Arr::get($requestData, $direction)) {
                 return new static($direction, $target);
             }
         }
