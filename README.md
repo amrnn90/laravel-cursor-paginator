@@ -1,6 +1,6 @@
 # Laravel Cursor Paginator
 
-[![Build Status](https://travis-ci.org/amrnn/laravel-cursor-paginator.svg?branch=master)](https://travis-ci.org/amrnn/laravel-cursor-paginator)
+[![Build Status](https://travis-ci.org/amrnn/laravel-cursor-paginator.svg?branch=master)](https://travis-ci.org/amrnn90/laravel-cursor-paginator)
 
 Easily have cursor based pagination in your Eloquent models and query builders, read [this article](https://use-the-index-luke.com/sql/partial-results/fetch-next-page) to understand the benefits of cursor pagination and the problems it attempts to solve.
 
