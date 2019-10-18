@@ -73,7 +73,7 @@ trait QueryHelpers
     protected function getCleanQueryFrom($query)
     {
         if (method_exists($query, 'getModel')) {
-            return $query->getModel()->query();
+            return $query->getModel()->query()->withoutGlobalScopes();
         }
         return DB::table($query->from);
     }

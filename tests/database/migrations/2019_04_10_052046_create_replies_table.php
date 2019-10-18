@@ -18,6 +18,8 @@ class CreateRepliesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('likes_count');
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
