@@ -13,9 +13,9 @@ There's another [cursor-pagination](https://github.com/juampi92/cursor-paginatio
 * Detects if the model has date casts.
 * Mutiple cursor directions:
   * **before**: returns the items before the cursor.
-  * **before_i**: returns the items before the cusors (including the item at the cursor).
-  * **after**: returnsthe items after the cursor.
-  * **after_i**: return the items after the cursor (including the item at teh cursor).
+  * **before_i**: returns the items before the cursor (including the item at the cursor).
+  * **after**: returns the items after the cursor.
+  * **after_i**: returns the items after the cursor (including the item at the cursor).
 
 ## Installation
 
