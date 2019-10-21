@@ -44,12 +44,22 @@ class QueryMeta
     protected function firstItemCursor($meta)
     {
         $itemsFirst = $meta->first;
+
+        if (!$itemsFirst) {
+            return null;
+        }
+
         return Cursor::afterInclusive($this->targetsManager->targetFromItem($itemsFirst));
     }
 
     protected function lastItemCursor($meta)
     {
         $itemsLast = $meta->last;
+
+        if (!$itemsLast) {
+            return null;
+        }
+        
         return Cursor::beforeInclusive($this->targetsManager->targetFromItem($itemsLast));
     }
 
