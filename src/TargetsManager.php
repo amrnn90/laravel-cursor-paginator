@@ -38,6 +38,10 @@ class TargetsManager
 
     public function targetFromItem($item)
     {
+        if (!$item) {
+            return null;
+        }
+        
         $targets = [];
         foreach ($this->getOrderColumnList($this->query) as $column) {
             $targets[] = $this->extractColumnFromItem($item, $column);

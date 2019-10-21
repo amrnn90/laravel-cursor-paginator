@@ -58,7 +58,9 @@ class QueryMeta
         $itemsFirst = $this->items->first();
         $itemsFirstTarget = $this->targetsManager->targetFromItem($itemsFirst);
 
-        return $meta->first != $itemsFirst ? Cursor::before($itemsFirstTarget) : null;
+        if (!$itemsFirstTarget) return null;
+
+        return !$this->modelsEqual($meta->first, $itemsFirst) ? Cursor::before($itemsFirstTarget) : null;
     }
 
     protected function nextCursor($meta)
@@ -66,7 +68,9 @@ class QueryMeta
         $itemsLast = $this->items->last();
         $itemsLastTarget = $this->targetsManager->targetFromItem($itemsLast);
 
-        return $meta->last != $itemsLast ? Cursor::after($itemsLastTarget) : null;
+        if (!$itemsLastTarget) return null;
+
+        return !$this->modelsEqual($meta->last, $itemsLast) ? Cursor::after($itemsLastTarget) : null;
     }
 
     protected function currentCursor()
@@ -75,6 +79,13 @@ class QueryMeta
             return null;
         }
         return $this->currentCursor;
+    }
+
+    protected function modelsEqual($first, $second) {
+        if (method_exists($first, 'is')) {
+            return $first->is($second);
+        }
+        return $first == $second;
     }
 
     protected function runQueryMeta()
