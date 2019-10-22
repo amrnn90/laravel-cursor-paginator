@@ -2,11 +2,13 @@
 
 namespace Amrnn\CursorPaginator;
 
+use JsonSerializable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 use Amrnn\CursorPaginator\Exceptions\CursorPaginatorException;
+use Amrnn\CursorPaginator\Util\Base64Url;
 
-class Cursor implements Jsonable, Arrayable
+class Cursor implements JsonSerializable, Jsonable, Arrayable
 {
     public $direction;
     public $target;
@@ -29,6 +31,10 @@ class Cursor implements Jsonable, Arrayable
 
     public static function fromRequest($requestData)
     {
+        $cursorName = self::hashCursorName();
+        if(self::hashCursor() && isset($requestData[$cursorName])) {
+            $requestData = json_decode(Base64Url::decode($requestData[$cursorName]), true);
+        }
         foreach (array_keys(static::queryMappings()) as $direction) {
             if ($target = \Arr::get($requestData, $direction)) {
                 return new static($direction, $target);
@@ -90,7 +96,21 @@ class Cursor implements Jsonable, Arrayable
     public function urlParams()
     {
         if (!$this->isValid()) return null;
-        return [$this->direction => $this->target];
+        $params = [$this->direction => $this->target];
+        if(self::hashCursor()) {
+            $params = [ self::hashCursorName() => Base64Url::encode(json_encode($params))];
+        }
+        return $params;
+    }
+
+    protected static function hashCursor(): bool
+    {
+        return config('cursor_paginator.hash_cursor');
+    }
+
+    protected static function hashCursorName(): string
+    {
+        return config('cursor_paginator.hash_cursor_name', 'cursor');
     }
 
     public function isValid()
@@ -101,6 +121,9 @@ class Cursor implements Jsonable, Arrayable
     public function toArray()
     {
         if (!$this->isValid()) return null;
+        if(self::hashCursor()) {
+            return $this->urlParams();
+        }
         return [
             'direction' => $this->direction,
             'target' => $this->target
@@ -109,7 +132,16 @@ class Cursor implements Jsonable, Arrayable
 
     public function toJson($options = 0)
     {
-        return json_encode($this->toArray(), $options);
+        return json_encode($this->jsonSerialize(), $options);
+    }
+
+    public function jsonSerialize()
+    {
+        if (!$this->isValid()) return null;
+        if(self::hashCursor()) {
+            return Base64Url::encode(json_encode([$this->direction => $this->target]));
+        }
+        return $this->toArray();
     }
 
     public function paginate($query, $perPage, $targetsManagerOptions = [])
