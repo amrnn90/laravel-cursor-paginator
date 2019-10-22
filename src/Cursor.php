@@ -31,8 +31,8 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
 
     public static function fromRequest($requestData)
     {
-        $cursorName = self::hashCursorName();
-        if(self::hashCursor() && isset($requestData[$cursorName])) {
+        $cursorName = self::encodedCursorName();
+        if(self::encodeCursor() && isset($requestData[$cursorName])) {
             $requestData = json_decode(Base64Url::decode($requestData[$cursorName]), true);
         }
         foreach (array_keys(static::queryMappings()) as $direction) {
@@ -97,20 +97,20 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
     {
         if (!$this->isValid()) return null;
         $params = [$this->direction => $this->target];
-        if(self::hashCursor()) {
-            $params = [ self::hashCursorName() => Base64Url::encode(json_encode($params))];
+        if(self::encodeCursor()) {
+            $params = [ self::encodedCursorName() => Base64Url::encode(json_encode($params))];
         }
         return $params;
     }
 
-    protected static function hashCursor(): bool
+    protected static function encodeCursor(): bool
     {
-        return config('cursor_paginator.hash_cursor');
+        return config('cursor_paginator.encode_cursor');
     }
 
-    protected static function hashCursorName(): string
+    protected static function encodedCursorName(): string
     {
-        return config('cursor_paginator.hash_cursor_name', 'cursor');
+        return config('cursor_paginator.encoded_cursor_name', 'cursor');
     }
 
     public function isValid()
@@ -121,7 +121,7 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
     public function toArray()
     {
         if (!$this->isValid()) return null;
-        if(self::hashCursor()) {
+        if(self::encodeCursor()) {
             return $this->urlParams();
         }
         return [
@@ -138,7 +138,7 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
     public function jsonSerialize()
     {
         if (!$this->isValid()) return null;
-        if(self::hashCursor()) {
+        if(self::encodeCursor()) {
             return Base64Url::encode(json_encode([$this->direction => $this->target]));
         }
         return $this->toArray();

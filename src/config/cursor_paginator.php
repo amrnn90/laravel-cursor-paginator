@@ -28,21 +28,21 @@ return [
     'per_page' => 10,
 
     /**
-     * Whether to hash url query.
+     * Whether to encode url query.
      *
      * If set to true then your urls might look like:
      * http://localhost:8000/cursor=eyJhZnRlciI6M30 instead of http://localhost:8000/after=3
      */
-    'hash_cursor' => false,
+    'encode_cursor' => false,
 
     /**
-     * Cursor url query name to use when `hash_cursor` set to is `true`.
+     * Cursor url query name to use when `encode_cursor` set to is `true`.
      *
      * for example if you change:
-     * 'hash_cursor_name' => 'page-id'
+     * 'encoded_cursor_name' => 'page-id'
      *
      * then your urls might look like:
      * http://localhost:8000/page-id=eyJhZnRlciI6M30 instead of http://localhost:8000/cursor=eyJhZnRlciI6M30
      */
-    'hash_cursor_name' => 'cursor',
+    'encoded_cursor_name' => 'cursor',
 ];

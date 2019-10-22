@@ -4,7 +4,8 @@
 namespace Amrnn\CursorPaginator\Util;
 
 
-class Base64Url {
+class Base64Url
+{
     public static function encode(string $data): string
     {
         $encoded = base64_encode($data);
