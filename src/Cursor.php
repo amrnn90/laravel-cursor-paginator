@@ -98,7 +98,7 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
         if (!$this->isValid()) return null;
         $params = [$this->direction => $this->target];
         if(self::encodeCursor()) {
-            $params = [ self::encodedCursorName() => Base64Url::encode(json_encode($params))];
+            $params = [ self::encodedCursorName() => Base64Url::encode(json_encode($params, JSON_NUMERIC_CHECK))];
         }
         return $params;
     }
@@ -139,7 +139,7 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
     {
         if (!$this->isValid()) return null;
         if(self::encodeCursor()) {
-            return Base64Url::encode(json_encode([$this->direction => $this->target]));
+            return Base64Url::encode(json_encode([$this->direction => $this->target],JSON_NUMERIC_CHECK));
         }
         return $this->toArray();
     }
