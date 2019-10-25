@@ -21,6 +21,7 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     {
         $this->options = $options;
 
+        // options are not currently used
         foreach ($options as $key => $value) {
             $this->{$key} = $value;
         }
@@ -28,10 +29,7 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->perPage = $perPage;
         $this->meta = $meta;
 
-        if (!isset($options['path'])) {
-            $this->path = static::resolveCurrentPath();
-        }
-
+        $this->path = static::resolveCurrentPath();
         $this->path = $this->path !== '/' ? rtrim($this->path, '/') : $this->path;
 
         $this->setItems($items);
