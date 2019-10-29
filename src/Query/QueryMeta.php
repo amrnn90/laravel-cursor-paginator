@@ -111,11 +111,11 @@ class QueryMeta
         $this->removeEagerLoad($firstLastQuery);
 
         $firstAndLast = $firstLastQuery->get();
-
+        
         return (object) [
             'total' => (int)$count,
             'first' => $firstAndLast->first(),
-            'last' => $firstAndLast->count() > 1 ? $firstAndLast->last() : null
+            'last' => $firstAndLast->last()
         ];
     }
 }

@@ -79,6 +79,14 @@ class QueryMetaTest extends TestCase
         $meta = (new QueryMeta($query, $items, $cursor, $targetsManager))->meta();
 
         $this->assertNull($meta['next']);
+
+        $query = Reply::where('id', 1)->orderBy('id');
+        $items = Reply::where('id', 1)->get();
+        $cursor = new Cursor('after_i', 1);
+        $targetsManager = new TargetsManager($query);
+        $meta = (new QueryMeta($query, $items, $cursor, $targetsManager))->meta();
+
+        $this->assertNull($meta['next']);
     }
 
     /** @test */
