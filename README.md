@@ -8,14 +8,14 @@ There's another [cursor-pagination](https://github.com/juampi92/cursor-paginatio
 
 ### Features
 
-* Automatically paginates based on columns ordering.
-* Supports multi-column ordering which makes it easy to have a deterministic row sequence.
-* Detects if the model has date casts.
-* Mutiple cursor directions:
-  * **before**: returns the items before the cursor.
-  * **before_i**: returns the items before the cursor (including the item at the cursor).
-  * **after**: returns the items after the cursor.
-  * **after_i**: returns the items after the cursor (including the item at the cursor).
+- Automatically paginates based on columns ordering.
+- Supports multi-column ordering which makes it easy to have a deterministic row sequence.
+- Detects if the model has date casts.
+- Mutiple cursor directions:
+  - **before**: returns the items before the cursor.
+  - **before_i**: returns the items before the cursor (including the item at the cursor).
+  - **after**: returns the items after the cursor.
+  - **after_i**: returns the items after the cursor (including the item at the cursor).
 
 ## Installation
 
@@ -32,6 +32,7 @@ php artisan vendor:publish --provider="Amrnn\CursorPaginator\PaginatorServicePro
 ```
 
 ### Register service provider
+
 The package automatically registers itself, but if you need to you can add the service provider manually.
 
 ```php
@@ -64,12 +65,12 @@ which will return something like this:
 
     /**
     * number of items per page
-    */  
+    */
     "per_page": 5,
 
     /**
     * total items in result set for your query
-    */  
+    */
     "total": 10,
 
     /**
@@ -84,7 +85,7 @@ which will return something like this:
     "first_page_url": "http://localhost:8000/posts?after_i=10",
     "last_page_url": "http://localhost:8000/posts?before_i=1",
     "next_page_url": "http://localhost:8000/posts?after=6",
-    "prev_page_url": null,
+    "prev_page_url": "http://localhost:8000/posts?before=10",
 
     /*
     * these provide the cursor data structures.
@@ -95,11 +96,19 @@ which will return something like this:
     "first_page": {...},
     "last_page": {...},
     "next_page": {...},
-    "previous_page": null
+    "previous_page": {...},
+
+    /*
+    * determine if there are more next/previous items
+    */
+    "has_next": true,
+    "has_previous": false,
+
 }
 ```
 
 ### Options
+
 You can pass an optional first argument to `paginateCursor()` to specify the number of items per page (if left empty a default value from config file is used):
 
 ```php
@@ -108,6 +117,7 @@ Post::orderBy('id')->cursorPaginate(10);
 ```
 
 The package should automatically determine date casts by inspecting your model. However, if you're invoking the pagination on a plain query builder then you may need to pass a second argument which tells it about the date casts:
+
 ```php
 // no need to specify date casts here
 Post::orderBy('created_at')->cursorPaginate(10);
@@ -119,6 +129,7 @@ DB::table('posts')
 ```
 
 ### Multiple Columns
+
 You can order by multiple columns and pagination should work as expected:
 
 ```php
@@ -126,15 +137,19 @@ Post::orderBy('created_at')->orderBy('id')->cursorPaginate();
 
 Post::orderBy('created_at', 'desc')->orderBy('id', 'desc'')->cursorPaginate();
 ```
+
 > It's not recommended to mix directions (asc, desc) when ordering by multiple columns. Doing that would make using table indexes hard for your database.
 
 ### Caveats
+
 All the columns that you're ordering by must also appear in your select statement, for example the following won't work:
 
 ```php
 Post::select('id')->orderBy('created_at')->cursorPaginate();
 ```
+
 You have to do any of the following instead:
+
 ```php
 Post::select('id', 'created_at')->orderBy('created_at')->cursorPaginate();
 
@@ -149,14 +164,14 @@ Post::orderBy('created_at')->cursorPaginate()
 ```php
 return [
     /**
-     * 
+     *
      * Cursor direction names
-     * 
+     *
      * these appear in the url query string, change their mappings if you need to.
-     * for example if you change: 
-     * 
+     * for example if you change:
+     *
      * 'before' => 'b'
-     * 
+     *
      * then your urls might look like:
      * http://localhost:8000/b=10 instead of http://localhost:8000/before=10
      */
@@ -188,7 +203,7 @@ return [
 
     /**
      * Default number of items per page.
-     * 
+     *
      * This can be overridden by passing a first argument to the `cursorPaginate()` method.
      */
     'per_page' => 10,

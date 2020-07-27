@@ -126,7 +126,7 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
     public function toArray()
     {
         return [
-            'data' => $this->getCollection(),
+            'data' => collect($this->getCollection())->values()->all(),
             'per_page' => $this->perPage(),
             'total' => $this->meta['total'],
             'next_item' => $this->meta['next_item'],
@@ -135,7 +135,9 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
             'first_page' => $this->meta['first'],
             'last_page' => $this->meta['last'],
             'next_page' => $this->meta['next'],
+            'has_next' => $this->meta['has_next'],
             'previous_page' => $this->meta['previous'],
+            'has_previous' => $this->meta['has_previous'],
 
             'first_page_url' => $this->firstPageUrl(),
             'last_page_url' => $this->lastPageUrl(),

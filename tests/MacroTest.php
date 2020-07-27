@@ -43,7 +43,7 @@ class MacroTest extends TestCase
 
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
 
-        $this->assertEquals([2, 3, 4], $paginatorData['data']->pluck('id')->all());
+        $this->assertEquals([2, 3, 4], collect($paginatorData['data'])->pluck('id')->all());
     }
 
     /** @test */
@@ -52,7 +52,7 @@ class MacroTest extends TestCase
 
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
 
-        $this->assertEquals([1, 2, 3], $paginatorData['data']->pluck('id')->all());
+        $this->assertEquals([1, 2, 3], collect($paginatorData['data'])->pluck('id')->all());
         $this->assertEquals(new Cursor('after_i', 1), $paginatorData['current_page']);
     }
 
@@ -70,7 +70,7 @@ class MacroTest extends TestCase
 
         $this->assertEquals(
             [2004, 2006, 2008],
-            $paginatorData['data']->pluck('created_at')->map->get('year')->all()
+            collect($paginatorData['data'])->pluck('created_at')->map->get('year')->all()
         );
         $this->assertEquals(2002, $paginatorData['next_item']->created_at->get('year'));
     }
@@ -89,7 +89,7 @@ class MacroTest extends TestCase
 
         $this->assertEquals(
             [2006, 2008, 2009],
-            $paginatorData['data']->pluck('created_at')->map(function ($i) {
+            collect($paginatorData['data'])->pluck('created_at')->map(function ($i) {
                 return Carbon::parse($i)->get('year');
             })->all()
         );
@@ -173,10 +173,10 @@ class MacroTest extends TestCase
     {
         $this->request(['after_i' => 1]);
         $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
-        $items = Reply::whereIn('id', [1,2,3])->get();
+        $items = Reply::whereIn('id', [1, 2, 3])->get();
         $nextItem = Reply::find(4);
 
-        $this->assertEquals($items, $paginatorData['data']);
+        $this->assertEquals($items->all(), $paginatorData['data']);
         $this->assertEquals($nextItem, $paginatorData['next_item']);
     }
 }

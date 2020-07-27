@@ -1,35 +1,40 @@
 {
-    "name": "amrnn/laravel-cursor-paginator",
-    "description": "Cursor pagination for Laravel",
-    "keywords": ["laravel", "eloquent", "cursor", "pagination"],
-    "type": "library",
-    "require": {},
-    "require-dev": {
-        "phpunit/phpunit": "^8.1",
-        "orchestra/testbench": "^3.8"
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Amr Noman",
-            "email": "amrnn90@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Amrnn\\CursorPaginator\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Amrnn\\CursorPaginator\\PaginatorServiceProvider"
-            ]
-        }
+  "name": "amrnn/laravel-cursor-paginator",
+  "description": "Cursor pagination for Laravel",
+  "keywords": [
+    "laravel",
+    "eloquent",
+    "cursor",
+    "pagination"
+  ],
+  "type": "library",
+  "require": {},
+  "require-dev": {
+    "orchestra/testbench": "^5.3",
+    "phpunit/phpunit": "^9.2"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Amr Noman",
+      "email": "amrnn90@gmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Amrnn\\CursorPaginator\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Amrnn\\CursorPaginator\\PaginatorServiceProvider"
+      ]
+    }
+  }
 }

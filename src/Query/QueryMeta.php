@@ -34,8 +34,10 @@ class QueryMeta
             'total' => $meta->total,
             'first' => $firstItemCursor,
             'last' => $this->lastItemCursor($meta),
-            'previous' => $this->previousCursor($meta),
-            'next' => $this->nextCursor($meta),
+            'previous' => $this->previousCursor(),
+            'has_previous' => $this->hasPreviousItems($meta),
+            'next' => $this->nextCursor(),
+            'has_next' => $this->hasNextItems($meta),
             'current' => $this->currentCursor() ?? $firstItemCursor,
             'next_item' => $this->nextItem
         ];
@@ -59,28 +61,36 @@ class QueryMeta
         if (!$itemsLast) {
             return null;
         }
-        
+
         return Cursor::beforeInclusive($this->targetsManager->targetFromItem($itemsLast));
     }
 
-    protected function previousCursor($meta)
+    protected function previousCursor()
     {
-        $itemsFirst = $this->items->first();
-        $itemsFirstTarget = $this->targetsManager->targetFromItem($itemsFirst);
+        $itemsFirstTarget = $this->targetsManager->targetFromItem($this->items->first());
 
         if (!$itemsFirstTarget) return null;
 
-        return !$this->modelsEqual($meta->first, $itemsFirst) ? Cursor::before($itemsFirstTarget) : null;
+        return Cursor::before($itemsFirstTarget);
     }
 
-    protected function nextCursor($meta)
+    protected function hasPreviousItems($meta)
     {
-        $itemsLast = $this->items->last();
-        $itemsLastTarget = $this->targetsManager->targetFromItem($itemsLast);
+        return !$this->modelsEqual($meta->first, $this->items->first());
+    }
+
+    protected function nextCursor()
+    {
+        $itemsLastTarget = $this->targetsManager->targetFromItem($this->items->last());
 
         if (!$itemsLastTarget) return null;
 
-        return !$this->modelsEqual($meta->last, $itemsLast) ? Cursor::after($itemsLastTarget) : null;
+        return Cursor::after($itemsLastTarget);
+    }
+
+    protected function hasNextItems($meta)
+    {
+        return !$this->modelsEqual($meta->last, $this->items->last());
     }
 
     protected function currentCursor()
@@ -91,7 +101,8 @@ class QueryMeta
         return $this->currentCursor;
     }
 
-    protected function modelsEqual($first, $second) {
+    protected function modelsEqual($first, $second)
+    {
         if (method_exists($first, 'is')) {
             return $first->is($second);
         }
@@ -111,7 +122,7 @@ class QueryMeta
         $this->removeEagerLoad($firstLastQuery);
 
         $firstAndLast = $firstLastQuery->get();
-        
+
         return (object) [
             'total' => (int)$count,
             'first' => $firstAndLast->first(),
