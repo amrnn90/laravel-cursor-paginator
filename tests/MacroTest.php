@@ -147,6 +147,32 @@ class MacroTest extends TestCase
     }
 
     /** @test */
+    public function maps_encoded_array_cursor_from_config()
+    {
+        config(['cursor_paginator' => [
+            'encode_cursor' => true,
+            'encoded_cursor_name' => 'page-id',
+            'directions' => [
+                'before' => 'page.b',
+                'before_i' => 'page.bi',
+                'after' => 'after.a',
+                'after_i' => 'after.ai'
+            ]
+        ]]);
+
+        $this->request(['page-id' => 'eyJhZnRlci5haSI6MX0']);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $this->assertEquals(['page-id' => 'eyJhZnRlci5haSI6MX0'], $paginatorData['current_page']->toArray());
+
+        $this->request(['page-id' => 'eyJhZnRlci5haSI6MX0']);
+        $paginatorData = Reply::orderBy('id')->cursorPaginate(3)->toArray();
+        $this->assertEquals(['page-id' => 'eyJhZnRlci5haSI6MX0'], $paginatorData['current_page']->toArray());
+
+        $this->assertEquals(['page-id' => 'eyJhZnRlci5haSI6MX0'], $paginatorData['first_page']->toArray());
+        $this->assertEquals(['page-id' => 'eyJwYWdlLmJpIjoxMH0'], $paginatorData['last_page']->toArray());
+    }
+
+    /** @test */
     public function use_defaut_per_page_from_config()
     {
         $this->request(['before' => 5]);

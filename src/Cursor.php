@@ -37,6 +37,12 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
         }
         foreach (array_keys(static::queryMappings()) as $direction) {
             if ($target = \Arr::get($requestData, $direction)) {
+                if (self::encodeCursor()) {
+                    $decodedTarget = json_decode(Base64Url::decode($target), true);
+                    if (is_array($decodedTarget) && $decodedTarget[$direction]) {
+                        return new static($direction, $decodedTarget[$direction]);
+                    }
+                }
                 return new static($direction, $target);
             }
         }
