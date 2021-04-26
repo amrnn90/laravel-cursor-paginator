@@ -21,14 +21,22 @@ class WhereApplier
 
     public function applyWhere()
     {
-        for ($i = 0; $i < count($this->targets); $i++) {
+        $targets = $this->targets;
+        for ($i = 0; $i < count($targets); $i++) {
             $column = $this->getOrderColumn($this->query, $i);
             $comparator = $this->getComparatorForTarget($i);
 
             if ($i == 0) {
-                $this->query->whereRaw("`$column` $comparator ?", [$this->targets[$i]]);
+                $this->query->where($column, $comparator, $targets[$i]);
             } else {
-                $this->applyWhereForColumnsAfterFirst($i);
+                $this->query->where(function ($query) use ($i, $column, $comparator, $targets) {
+                    // Get previous column conditions
+                    for ($j = 0; $j < $i; $j++) {
+                        $query->where($this->getOrderColumn($this->query, $j), '=', $targets[$j]);
+                    }
+
+                    $query->where($column, $comparator, $targets[$i]);
+                }, null, null, 'and not');
             }
         }
         return $this->query;
