@@ -83,7 +83,7 @@ class QueryMeta
     {
         $itemsLastTarget = $this->targetsManager->targetFromItem($this->items->last());
 
-        if (!$itemsLastTarget) return null;
+        if (is_null($itemsLastTarget)) return null;
 
         return Cursor::after($itemsLastTarget);
     }
