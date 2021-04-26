@@ -51,6 +51,11 @@ class CursorPaginator extends AbstractPaginator implements Arrayable, ArrayAcces
         $this->items = $items;
     }
 
+    public function getItems()
+    {
+        return $this->items;
+    }
+
     public function hasMorePages()
     {
         return $this->meta['next'] != null;
