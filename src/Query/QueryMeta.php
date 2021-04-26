@@ -115,7 +115,7 @@ class QueryMeta
 
         $count = with(clone $query)->count();
         $firstLastQuery = $this->wrapQuery(
-            with(clone $query)->limit(1)->union(
+            with(clone $query)->limit(1)->unionAll(
                 with($this->reverseQueryOrders(clone $query))->limit(1)
             )
         );
