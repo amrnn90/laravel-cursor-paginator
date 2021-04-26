@@ -115,7 +115,7 @@ class Cursor implements JsonSerializable, Jsonable, Arrayable
 
     public function isValid()
     {
-        return !(empty($this->direction) || empty($this->target));
+        return !(empty($this->direction) || is_null($this->target));
     }
 
     public function toArray()
