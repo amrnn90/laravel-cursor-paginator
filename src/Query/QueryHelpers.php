@@ -111,7 +111,7 @@ trait QueryHelpers
             $this->removeOrders($inner);
         }
 
-        return $wrapper->fromSub($inner, null);
+        return $wrapper->fromSub($inner, 'wrap');
     }
 
     protected function ensureQueryIsOrdered($query)
