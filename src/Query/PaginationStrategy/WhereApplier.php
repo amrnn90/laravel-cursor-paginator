@@ -26,7 +26,7 @@ class WhereApplier
             $comparator = $this->getComparatorForTarget($i);
 
             if ($i == 0) {
-                $this->query->whereRaw("`$column` $comparator ?", [$this->targets[$i]]);
+                $this->query->where($column, $comparator, $this->targets[$i]);
             } else {
                 $this->applyWhereForColumnsAfterFirst($i);
             }
