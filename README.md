@@ -46,11 +46,11 @@ The package automatically registers itself, but if you need to you can add the s
 
 ## Usage
 
-This package provides a `cursorPaginate()` method that you can invoke on your Eloquent models or query builders:
+This package provides a `myCursorPaginate()` method that you can invoke on your Eloquent models or query builders:
 
 ```php
 Route::get('/posts', function() {
-    return Post::select('id')->orderBy('id', 'desc')->cursorPaginate(5);
+    return Post::select('id')->orderBy('id', 'desc')->myCursorPaginate(5);
 })
 ```
 
@@ -113,19 +113,19 @@ You can pass an optional first argument to `paginateCursor()` to specify the num
 
 ```php
 // will return 10 items per page
-Post::orderBy('id')->cursorPaginate(10);
+Post::orderBy('id')->myCursorPaginate(10);
 ```
 
 The package should automatically determine date casts by inspecting your model. However, if you're invoking the pagination on a plain query builder then you may need to pass a second argument which tells it about the date casts:
 
 ```php
 // no need to specify date casts here
-Post::orderBy('created_at')->cursorPaginate(10);
+Post::orderBy('created_at')->myCursorPaginate(10);
 
 // must tell a plain query builder about the dates
 DB::table('posts')
     ->orderBy('created_at')
-    ->cursorPaginate(10, ['dates' => ['created_at']]);
+    ->myCursorPaginate(10, ['dates' => ['created_at']]);
 ```
 
 ### Multiple Columns
@@ -133,9 +133,9 @@ DB::table('posts')
 You can order by multiple columns and pagination should work as expected:
 
 ```php
-Post::orderBy('created_at')->orderBy('id')->cursorPaginate();
+Post::orderBy('created_at')->orderBy('id')->myCursorPaginate();
 
-Post::orderBy('created_at', 'desc')->orderBy('id', 'desc'')->cursorPaginate();
+Post::orderBy('created_at', 'desc')->orderBy('id', 'desc'')->myCursorPaginate();
 ```
 
 > It's not recommended to mix directions (asc, desc) when ordering by multiple columns. Doing that would make using table indexes hard for your database.
@@ -145,17 +145,17 @@ Post::orderBy('created_at', 'desc')->orderBy('id', 'desc'')->cursorPaginate();
 All the columns that you're ordering by must also appear in your select statement, for example the following won't work:
 
 ```php
-Post::select('id')->orderBy('created_at')->cursorPaginate();
+Post::select('id')->orderBy('created_at')->myCursorPaginate();
 ```
 
 You have to do any of the following instead:
 
 ```php
-Post::select('id', 'created_at')->orderBy('created_at')->cursorPaginate();
+Post::select('id', 'created_at')->orderBy('created_at')->myCursorPaginate();
 
 // or
 
-Post::orderBy('created_at')->cursorPaginate()
+Post::orderBy('created_at')->myCursorPaginate()
 
 ```
 
@@ -204,7 +204,7 @@ return [
     /**
      * Default number of items per page.
      *
-     * This can be overridden by passing a first argument to the `cursorPaginate()` method.
+     * This can be overridden by passing a first argument to the `myCursorPaginate()` method.
      */
     'per_page' => 10,
 ];

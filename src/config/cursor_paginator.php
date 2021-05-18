@@ -2,14 +2,14 @@
 
 return [
     /**
-     * 
+     *
      * Cursor direction names
-     * 
+     *
      * these appear in the url query string, change their mappings if you need to.
-     * for example if you change: 
-     * 
+     * for example if you change:
+     *
      * 'before' => 'b'
-     * 
+     *
      * then your urls might look like:
      * http://localhost:8000/b=10 instead of http://localhost:8000/before=10
      */
@@ -41,8 +41,8 @@ return [
 
     /**
      * Default number of items per page.
-     * 
-     * This can be overridden by passing a first argument to the `cursorPaginate()` method.
+     *
+     * This can be overridden by passing a first argument to the `myCursorPaginate()` method.
      */
     'per_page' => 10,
 ];
