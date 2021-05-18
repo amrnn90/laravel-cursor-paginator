@@ -1,5 +1,5 @@
 {
-  "name": "amrnn/laravel-cursor-paginator",
+  "name": "lucianobosco/laravel-cursor-paginator",
   "description": "Cursor pagination for Laravel",
   "keywords": [
     "laravel",
